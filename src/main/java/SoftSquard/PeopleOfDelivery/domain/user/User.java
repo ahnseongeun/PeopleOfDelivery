@@ -3,6 +3,7 @@ package SoftSquard.PeopleOfDelivery.domain.user;
 import SoftSquard.PeopleOfDelivery.config.BaseEntity;
 import SoftSquard.PeopleOfDelivery.domain.coupon.Coupon;
 import SoftSquard.PeopleOfDelivery.domain.menu.Menu;
+import SoftSquard.PeopleOfDelivery.domain.order.Order;
 import SoftSquard.PeopleOfDelivery.domain.shoppingBasket.ShoppingBasket;
 import SoftSquard.PeopleOfDelivery.domain.store.Store;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -62,4 +63,7 @@ public class User extends BaseEntity {
     @JsonBackReference("ShoppingBasket_user_id")
     private List<ShoppingBasket> shoppingBaskets;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference("Order_user_id")
+    private List<Order> orders;
 }

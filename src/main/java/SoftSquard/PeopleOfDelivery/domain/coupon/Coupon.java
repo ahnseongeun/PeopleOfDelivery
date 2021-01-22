@@ -3,10 +3,18 @@ package SoftSquard.PeopleOfDelivery.domain.coupon;
 import SoftSquard.PeopleOfDelivery.config.BaseEntity;
 import SoftSquard.PeopleOfDelivery.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
 @Entity
+@Data
+@Accessors(chain = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC) // Unit Test 를 위해 PUBLIC
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "coupon")
 public class Coupon extends BaseEntity{
 

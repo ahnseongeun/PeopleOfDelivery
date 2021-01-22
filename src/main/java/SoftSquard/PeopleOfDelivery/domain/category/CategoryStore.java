@@ -1,14 +1,21 @@
-package SoftSquard.PeopleOfDelivery.domain.categoryStore;
+package SoftSquard.PeopleOfDelivery.domain.category;
 
 import SoftSquard.PeopleOfDelivery.config.BaseEntity;
 import SoftSquard.PeopleOfDelivery.domain.catrgory.Category;
 import SoftSquard.PeopleOfDelivery.domain.store.Store;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
 @Entity
+@Data
+@Accessors(chain = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC) // Unit Test 를 위해 PUBLIC
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "category_store")
 public class CategoryStore extends BaseEntity {
 
@@ -19,13 +26,13 @@ public class CategoryStore extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "category_id",nullable = false)
-    @JsonBackReference("CategoryStore_category_id")
+    @JsonBackReference("category_store_category_id")
     private Category category;
 
 
     @ManyToOne
     @JoinColumn(name = "store_id")
-    @JsonBackReference("CategoryStore_store_id")
+    @JsonBackReference("category_store_store_id")
     private Store store;
 
 }

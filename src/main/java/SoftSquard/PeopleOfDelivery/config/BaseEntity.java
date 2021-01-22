@@ -1,5 +1,6 @@
 package SoftSquard.PeopleOfDelivery.config;
 
+import SoftSquard.PeopleOfDelivery.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,6 +28,8 @@ public abstract class BaseEntity {
     @UpdateTimestamp
     @Column(name = "updatedTime", nullable = false)
     private Date updatedTime;
+
+
 
 //    @PrePersist
 //    void prePersist() {

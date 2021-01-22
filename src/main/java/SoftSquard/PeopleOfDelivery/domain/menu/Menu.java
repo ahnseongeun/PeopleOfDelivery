@@ -1,17 +1,22 @@
 package SoftSquard.PeopleOfDelivery.domain.menu;
 
 import SoftSquard.PeopleOfDelivery.config.BaseEntity;
-import SoftSquard.PeopleOfDelivery.domain.categoryStore.CategoryStore;
+import SoftSquard.PeopleOfDelivery.domain.shoppingBasket.ShoppingBasket;
 import SoftSquard.PeopleOfDelivery.domain.store.Store;
-import SoftSquard.PeopleOfDelivery.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
+@Accessors(chain = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC) // Unit Test 를 위해 PUBLIC
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "menu")
 public class Menu extends BaseEntity {
 
@@ -26,16 +31,22 @@ public class Menu extends BaseEntity {
     @Column(name = "price", nullable = false)
     private String price;
 
-    @Column(name = "describe",nullable = false, columnDefinition = "TEXT")
-    private String describe;
+    @Column(name = "description",nullable = false, columnDefinition = "TEXT")
+    private String description;
 
-    @Column(name = "imageURI", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "image_uri", nullable = false, columnDefinition = "TEXT")
     private String imageURI;
 
+    /**
+     * 1은 사용, 2는 삭제
+     */
     @Column(name = "status", nullable = false)
     private String status;
 
-    @Column(name = "imageStatus", nullable = false)
+    /**
+     * 1은 사용, 2는 삭제
+     */
+    @Column(name = "image_status", nullable = false)
     private String imageStatus;
 
     @ManyToOne
@@ -44,8 +55,8 @@ public class Menu extends BaseEntity {
     private Store store;
 
     @OneToMany(mappedBy = "menu",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JsonBackReference("ShoppingBasket_menu_id")
-    private List<Menu> menus;
+    @JsonBackReference("shopping_basket_menu_id")
+    private List<ShoppingBasket> shoppingBaskets;
 
 
 }

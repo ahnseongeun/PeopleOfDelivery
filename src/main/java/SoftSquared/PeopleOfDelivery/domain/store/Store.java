@@ -1,7 +1,7 @@
 package SoftSquared.PeopleOfDelivery.domain.store;
 
 import SoftSquared.PeopleOfDelivery.config.BaseEntity;
-import SoftSquared.PeopleOfDelivery.domain.category.CategoryStore;
+import SoftSquared.PeopleOfDelivery.domain.categoryStore.CategoryStore;
 import SoftSquared.PeopleOfDelivery.domain.menu.Menu;
 import SoftSquared.PeopleOfDelivery.domain.review.Review;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
@@ -38,10 +38,10 @@ public class Store extends BaseEntity {
     private String location;
 
     @Column(name = "low_bound_delivery", nullable = false)
-    private Long lowBoundDelivery;
+    private Integer lowBoundDelivery;
 
     @Column(name = "delivery_fee", nullable = false)
-    private Long deliveryFee;
+    private Integer deliveryFee;
 
     @Column(name = "description", nullable = false)
     private String description;

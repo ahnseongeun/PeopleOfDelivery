@@ -17,6 +17,7 @@ public enum BaseResponseStatus {
     SUCCESS_DELETE_USER(true, 1015, "회원 탈퇴에 성공하였습니다."),
     SUCCESS_PATCH_USER(true, 1016, "회원정보 수정에 성공하였습니다."),
     SUCCESS_READ_SEARCH_USERS(true, 1017, "회원 검색 조회에 성공하였습니다."),
+    SUCCESS_READ_STORES(true,1018,"상점 검색 조회에 성공하였습니다."),
 
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
@@ -40,6 +41,7 @@ public enum BaseResponseStatus {
     FAILED_TO_LOGIN(false, 3014, "로그인에 실패하였습니다."),
     FAILED_TO_DELETE_USER(false, 3015, "회원 탈퇴에 실패하였습니다."),
     FAILED_TO_PATCH_USER(false, 3016, "개인정보 수정에 실패하였습니다."),
+    FAILED_TO_GET_STORE(false, 3017, "상점 조회에 실패하였습니다."),
 
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),

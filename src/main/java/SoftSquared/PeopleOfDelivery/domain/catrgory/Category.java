@@ -1,7 +1,7 @@
 package SoftSquared.PeopleOfDelivery.domain.catrgory;
 
 import SoftSquared.PeopleOfDelivery.config.BaseEntity;
-import SoftSquared.PeopleOfDelivery.domain.category.CategoryStore;
+import SoftSquared.PeopleOfDelivery.domain.categoryStore.CategoryStore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.Accessors;

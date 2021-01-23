@@ -1,4 +1,4 @@
-package SoftSquared.PeopleOfDelivery.domain.category;
+package SoftSquared.PeopleOfDelivery.domain.categoryStore;
 
 import SoftSquared.PeopleOfDelivery.config.BaseEntity;
 import SoftSquared.PeopleOfDelivery.domain.catrgory.Category;

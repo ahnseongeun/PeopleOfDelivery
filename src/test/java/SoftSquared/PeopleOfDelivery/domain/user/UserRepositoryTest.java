@@ -27,7 +27,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void 유저가_잘들어가는지_확인() throws Exception {
+    public void 회원이_잘들어가는지_확인() throws Exception {
         // when
         List<User> users = (List<User>) userRepository.findAll();
         // then

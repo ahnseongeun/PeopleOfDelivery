@@ -1,4 +1,4 @@
-package SoftSquared.PeopleOfDelivery.domain.category;
+package SoftSquared.PeopleOfDelivery.domain.categoryStore;
 
 import org.springframework.data.repository.CrudRepository;
 

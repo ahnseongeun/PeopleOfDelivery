@@ -28,4 +28,4 @@ spring:
 
 file:
   upload:
-    directory: "resources/img/"
+    directory: "/resources/img/"

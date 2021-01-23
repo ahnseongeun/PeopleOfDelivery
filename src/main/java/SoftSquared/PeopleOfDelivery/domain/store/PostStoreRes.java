@@ -1,5 +1,6 @@
 package SoftSquared.PeopleOfDelivery.domain.store;
 
+import SoftSquared.PeopleOfDelivery.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class PostStoreRes {
     private final Integer deliveryFee;
     private final String description;
     private final Integer userId;
-    private final String imageUrl;
+    private final String imageURI;
+    private final User user;
 
 }

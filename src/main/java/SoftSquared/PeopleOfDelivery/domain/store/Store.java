@@ -37,8 +37,8 @@ public class Store extends BaseEntity {
     @Column(name = "location", nullable = false)
     private String location;
 
-    @Column(name = "low_bound_delivery", nullable = false)
-    private Integer lowBoundDelivery;
+    @Column(name = "low_bound_price", nullable = false)
+    private Integer lowBoundPrice;
 
     @Column(name = "delivery_fee", nullable = false)
     private Integer deliveryFee;
@@ -49,11 +49,12 @@ public class Store extends BaseEntity {
     @Column(name = "image_uri", nullable = false)
     private String imageURI;
 
+
     /**
      * 1은 사용 , 2는 삭제
      */
     @Column(name = "status",nullable = false)
-    private Byte status;
+    private Integer status;
 
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference("category_store_store_id")

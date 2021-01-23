@@ -75,6 +75,7 @@ public class StoreController {
 
     /**
      * 상점 상세 조회
+     *
      */
     @ResponseBody
     @RequestMapping(value = "/stores/{storeId}" , method = RequestMethod.GET)

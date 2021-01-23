@@ -42,32 +42,11 @@ public class StoreProvider {
      * 상점 상세 조회
      * @return GetDetailStoreRes
      * @throws BaseException
-     *     private final Long id;
-     *     private final String name;
-     *     private final String phoneNumber;
-     *     private final String description;
-     *     private final Integer lowBoundPrice;
-     *     private final Integer deliveryFee;
-     *     //TODO
-     *     private final boolean choiceCheck;
-     *     private final Integer reviewCount;
-     *     private final Integer hostReviewCount;
-     *     private final Float totalStarAverage;
-     *     private final Integer pickStoreCount;
-     *     private final List<Menu> menuList;
-     */
-    /*
-            memberRepository.findByName(member.getName())
-                .ifPresent(m -> {
-                    //s – the String that contains a detailed message
-                    throw new IllegalStateException("이미 존재하는회원이다");
-                });
+
      */
     public GetDetailStoreRes retrieveDetailStore(Long storeId) throws BaseException{
         Store store = storeRepository.findByIdAndStatus(storeId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_DETAIL_STORE));
-
-
 
         return GetDetailStoreRes.builder()
                 .id(store.getId())
@@ -77,10 +56,10 @@ public class StoreProvider {
                 .lowBoundPrice(store.getLowBoundPrice())
                 .deliveryFee(store.getDeliveryFee())
                 .choiceCheck(true) //userId와 storeId를 이용해서 pick_store에 있는 지 확인 후 true/false
-                .reviewCount(3) //
-                .hostReviewCount(5)
-                .totalStarAverage((float) 3.8)
-                .pickStoreCount(10)
+                .reviewCount(store.getReviews().size())
+                .hostReviewCount(0) //review에서 제공
+                .totalStarAverage((float) 3.8) //review에서 제공
+                .pickStoreCount(10) // storeId를 이용해서 pick_store에 있는 지 확인 후 true/false
                 //.menuList()
                 .build();
     }

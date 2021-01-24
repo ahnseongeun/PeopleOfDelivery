@@ -13,5 +13,6 @@ public class GetMenuRes {
     private final Integer price;
     private final String description;
     private final String imageURL;
+    private final Integer imageStatus;
     private final Long storeId;
 }

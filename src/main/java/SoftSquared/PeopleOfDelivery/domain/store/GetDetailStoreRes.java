@@ -1,5 +1,6 @@
 package SoftSquared.PeopleOfDelivery.domain.store;
 
+import SoftSquared.PeopleOfDelivery.domain.menu.GetMenuRes;
 import SoftSquared.PeopleOfDelivery.domain.menu.Menu;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,6 @@ public class GetDetailStoreRes {
     private final Float totalStarAverage;
     private final Integer pickStoreCount;
     private final String imageURL;
-    //TODO
-    //private final List<Menu> menuList;
+    private final List<GetMenuRes> menuList;
 
 }

@@ -4,6 +4,7 @@ import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.domain.categoryStore.CategoryStoreRepository;
 import SoftSquared.PeopleOfDelivery.domain.catrgory.Category;
 import SoftSquared.PeopleOfDelivery.domain.catrgory.CategoryRepository;
+import SoftSquared.PeopleOfDelivery.domain.menu.GetMenuRes;
 import SoftSquared.PeopleOfDelivery.domain.order.OrdersRepository;
 import SoftSquared.PeopleOfDelivery.domain.store.GetDetailStoreRes;
 import SoftSquared.PeopleOfDelivery.domain.store.GetStoreRes;
@@ -79,7 +80,17 @@ public class StoreProvider {
                 .hostReviewCount(0) //review에서 제공
                 .totalStarAverage((float) 3.8) //review에서 제공
                 .pickStoreCount(10) // storeId를 이용해서 pick_store에 있는 있는 개수 만큼 count
-                //.menuList()
+                .menuList(store.getMenus().stream()
+                        .filter(menu -> menu.getStatus() == 1) //Status가 1인 것만 출력
+                        .map(menu -> GetMenuRes.builder()
+                        .id(menu.getId())
+                        .name(menu.getName())
+                        .price(menu.getPrice())
+                        .description(menu.getDescription())
+                        .storeId(menu.getStore().getId())
+                        .imageURL(menu.getImageURL())
+                        .imageStatus(menu.getImageStatus())
+                        .build()).collect(Collectors.toList()))
                 .build();
     }
 
@@ -170,6 +181,7 @@ public class StoreProvider {
      */
     public List<GetStoreRes> retrieveStoreListByLowBoundPrice(Long categoryId, Integer lowBoundPrice) throws BaseException {
         Sort sort = sortByLowBoundPrice();
+
         //TODO 카테고리 더미데이터 넣으면 추가
         //Optional<Category> category = categoryRepository.findById(categoryId);
         //List<Store> storeList = (List<Store>) categoryStoreRepository.findAllByCategory(category);

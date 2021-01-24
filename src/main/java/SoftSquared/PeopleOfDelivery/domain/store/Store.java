@@ -50,8 +50,8 @@ public class Store extends BaseEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "image_uri", nullable = false)
-    private String imageURI;
+    @Column(name = "image_url", nullable = false)
+    private String imageURL;
 
 
     /**

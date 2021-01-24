@@ -23,7 +23,7 @@ public class GetDetailStoreRes {
     private final Integer hostReviewCount;
     private final Float totalStarAverage;
     private final Integer pickStoreCount;
-    private final String imageURI;
+    private final String imageURL;
     //TODO
     //private final List<Menu> menuList;
 

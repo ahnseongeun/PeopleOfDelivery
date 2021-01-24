@@ -49,8 +49,8 @@ public class User extends BaseEntity {
     @Column(name = "location", columnDefinition = "TEXT")
     private String location;
 
-    @Column(name = "image_uri", columnDefinition = "TEXT")
-    private String imageURI;
+    @Column(name = "image_url", columnDefinition = "TEXT")
+    private String imageURL;
 
     /**
      * 0은 여자, 1은 남자

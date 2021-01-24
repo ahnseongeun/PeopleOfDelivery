@@ -29,25 +29,31 @@ public class Menu extends BaseEntity {
     private String name;
 
     @Column(name = "price", nullable = false)
-    private String price;
+    private Integer price;
 
     @Column(name = "description",nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "image_uri", nullable = false, columnDefinition = "TEXT")
-    private String imageURI;
+    @Column(name = "image_url", nullable = false, columnDefinition = "TEXT")
+    private String imageURL;
 
     /**
      * 1은 사용, 2는 삭제
      */
     @Column(name = "status", nullable = false)
-    private String status;
+    private Integer status;
 
     /**
      * 1은 사용, 2는 삭제
      */
     @Column(name = "image_status", nullable = false)
-    private String imageStatus;
+    private Integer imageStatus;
+
+    /**
+     * 1은 일반 메뉴, 2는 대표 메뉴, 3은 인기 메뉴 , 10은 삭제
+     */
+    @Column(name = "popular_check", nullable = false, columnDefinition = "Integer default 1")
+    private Integer popularCheck;
 
     @ManyToOne
     @JsonBackReference("menu_store_id")

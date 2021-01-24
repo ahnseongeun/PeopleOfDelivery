@@ -49,13 +49,13 @@ public class UserProvider {
             String userName = user.getName();
             String email = user.getEmail();
             String phoneNumber = user.getPhoneNumber();
-            String imageURI = user.getImageURI();
+            String imageURL = user.getImageURL();
             return GetUserRes.builder()
                     .id(id)
                     .name(userName)
                     .email(email)
                     .phoneNumber(phoneNumber)
-                    .image_url(imageURI)
+                    .imageURL(imageURL)
                     .build();
         }).collect(Collectors.toList());
     }
@@ -81,7 +81,7 @@ public class UserProvider {
                 .email(user.getEmail())
                 .name(user.getName())
                 .phoneNumber(user.getPhoneNumber())
-                .image_url(user.getImageURI())
+                .imageURL(user.getImageURL())
                 .build();
     }
 

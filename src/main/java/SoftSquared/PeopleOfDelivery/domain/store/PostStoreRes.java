@@ -18,7 +18,7 @@ public class PostStoreRes {
     private final Integer deliveryFee;
     private final String description;
     private final Integer userId;
-    private final String imageURI;
+    private final String imageURL;
     private final User user;
 
 }

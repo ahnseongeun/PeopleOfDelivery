@@ -95,21 +95,21 @@ public class StoreController {
         if(deliveryFeeAscend){ //배달팁이 낮은 순으로 모든 조회
             try{
                 getStoresList = storeProvider.retrieveStoreListByDeliveryFeeDESC(categoryId);
-                return new BaseResponse<>(SUCCESS_READ_STORES_BY_DELIVERY_FEE_DESC, getStoresList);
+                return new BaseResponse<>(SUCCESS_READ_STORES_BY_DELIVERY_FEE_ASC, getStoresList);
             }catch(BaseException exception){
                 return new BaseResponse<>(exception.getStatus());
             }
         }
-//
-//        if(lowBoundPrice > 0){ //최소 주문 금액(1000 , 3000, 5000) 이상
-//            try{
-//                getStoresList = storeProvider.retrieveStoreListByLowBoundPrice(categoryId, lowBoundPrice);
-//                return new BaseResponse<>(SUCCESS_READ_DETAIL_STORES, getStoresList);
-//            }catch(BaseException exception){
-//                return new BaseResponse<>(exception.getStatus());
-//            }
-//        }
-//
+
+        if(lowBoundPrice > 0){ //최소 주문 금액(1000 , 3000, 5000) 이상
+            try{
+                getStoresList = storeProvider.retrieveStoreListByLowBoundPrice(categoryId, lowBoundPrice);
+                return new BaseResponse<>(SUCCESS_READ_STORES_BY_LOW_BOUND_PRICE_ASC, getStoresList);
+            }catch(BaseException exception){
+                return new BaseResponse<>(exception.getStatus());
+            }
+        }
+
         if(deliveryFeeLowBound > 0){ //배달팁 기준 금액 이하
             try{
                 getStoresList = storeProvider.retrieveStoreListByDeliveryFeeLowBound(categoryId,deliveryFeeLowBound);
@@ -157,13 +157,13 @@ public class StoreController {
     @ApiOperation(value = "상점 추가 (가게 주인)", notes = "상점 추가")
     public BaseResponse<PostStoreRes> createStore (
             @RequestParam(value = "name") String name,
-            @RequestParam(value = "phoneNumber") String phoneNumber,
+            @RequestParam(value = "phone-number") String phoneNumber,
             @RequestParam(value = "location") String location,
-            @RequestParam(value = "lowBoundPrice") Integer lowBoundPrice,
-            @RequestParam(value = "deliveryFee") Integer deliveryFee,
+            @RequestParam(value = "low-bound-price") Integer lowBoundPrice,
+            @RequestParam(value = "delivery-fee") Integer deliveryFee,
             @RequestParam(value = "description") String description,
-            @RequestParam(value = "userId") Long userId,
-            @RequestParam(value = "imageFile",required = false) MultipartFile imageFile) throws IOException{
+            @RequestParam(value = "user-id") Long userId,
+            @RequestParam(value = "image-file",required = false) MultipartFile imageFile) throws IOException{
 
         try {
             PostStoreRes postStoreRes = storeService.createStore(
@@ -173,6 +173,14 @@ public class StoreController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    /**
+     * 업데이트
+     */
+
+    /**
+     * 삭제
+     */
 
 
 }

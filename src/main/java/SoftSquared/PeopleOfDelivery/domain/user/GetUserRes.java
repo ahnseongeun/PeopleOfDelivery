@@ -13,5 +13,5 @@ public class GetUserRes {
     private final String email;
     private final String name;
     private final String phoneNumber;
-    private final String image_url;
+    private final String imageURL;
 }

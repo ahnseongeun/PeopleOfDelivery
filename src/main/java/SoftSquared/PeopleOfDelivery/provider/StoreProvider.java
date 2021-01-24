@@ -73,18 +73,23 @@ public class StoreProvider {
                 .description(store.getDescription())
                 .lowBoundPrice(store.getLowBoundPrice())
                 .deliveryFee(store.getDeliveryFee())
-                .imageURI(store.getImageURI())
+                .imageURL(store.getImageURL())
                 .choiceCheck(true) //userId와 storeId를 이용해서 pick_store에 있는 지 확인 후 true/false
                 .reviewCount(store.getReviews().size())
                 .hostReviewCount(0) //review에서 제공
                 .totalStarAverage((float) 3.8) //review에서 제공
-                .pickStoreCount(10) // storeId를 이용해서 pick_store에 있는 지 확인 후 true/false
+                .pickStoreCount(10) // storeId를 이용해서 pick_store에 있는 있는 개수 만큼 count
                 //.menuList()
                 .build();
     }
 
 
 
+    /**
+     * 주문 많은순으로 조회
+     * @return GetStoreRes
+     * @throws BaseException
+     */
     public List<GetStoreRes> retrieveStoreListByOrder(Long categoryId) throws BaseException{
 
         //TODO 카테고리 더미데이터 넣으면 추가
@@ -99,24 +104,7 @@ public class StoreProvider {
             }
         });
         log.info("sort 성공");
-        return storeList.stream().map(store -> {
-            Long id = store.getId();
-            String name = store.getName();
-            String location = store.getLocation();
-            Integer lowBoundPrice = store.getLowBoundPrice();
-            Integer deliveryFee = store.getDeliveryFee();
-            Float totalStarAverage = 5.0F; //가게 평점 구하기
-            String imageURI = store.getImageURI();
-            return GetStoreRes.builder()
-                    .id(id)
-                    .name(name)
-                    .location(location)
-                    .lowBoundPrice(lowBoundPrice)
-                    .deliveryFee(deliveryFee)
-                    .totalStarAverage(totalStarAverage) //가게 평점 해야된다.
-                    .imageURI(imageURI)
-                    .build();
-        }).collect(Collectors.toList());
+        return getGetStoreRes(storeList);
 
     }
 
@@ -132,9 +120,12 @@ public class StoreProvider {
         //TODO 카테고리 더미데이터 넣으면 추가
         //Optional<Category> category = categoryRepository.findById(categoryId);
         //List<Store> storeList = (List<Store>) categoryStoreRepository.findAllByCategory(category);
-        List<Store> storeList = (List<Store>) storeRepository.findByStatus(1,sortByDeliveryFee());
+        List<Store> storeList =
+                (List<Store>) storeRepository.findByStatusAndDeliveryFeeLessThanEqual(1,deliveryFeeLowBound,sortByDeliveryFee());
+        return getGetStoreRes(storeList);
+        /*
         return storeList.stream()
-                .filter(store -> store.getDeliveryFee() <= deliveryFeeLowBound)
+                //.filter(store -> store.getDeliveryFee() <= deliveryFeeLowBound)
                 .map(store -> {
             Long id = store.getId();
             String name = store.getName();
@@ -153,6 +144,7 @@ public class StoreProvider {
                     .imageURI(imageURI)
                     .build();
         }).collect(Collectors.toList());
+        */
     }
 
     /**
@@ -167,29 +159,56 @@ public class StoreProvider {
         //List<Store> storeList = (List<Store>) categoryStoreRepository.findAllByCategory(category);
         List<Store> storeList = (List<Store>) storeRepository.findByStatus(1,sort);
 
-        return storeList.stream()
-                .map(store -> {
-                    Long id = store.getId();
-                    String name = store.getName();
-                    String location = store.getLocation();
-                    Integer lowBoundPrice = store.getLowBoundPrice();
-                    Integer storeDeliveryFee = store.getDeliveryFee();
-                    Float totalStarAverage = 5.0F; //가게 평점 구하기
-                    String imageURI = store.getImageURI();
-                    return GetStoreRes.builder()
-                            .id(id)
-                            .name(name)
-                            .location(location)
-                            .lowBoundPrice(lowBoundPrice)
-                            .deliveryFee(storeDeliveryFee)
-                            .totalStarAverage(totalStarAverage) //가게 평점 해야된다.
-                            .imageURI(imageURI)
-                            .build();
-                }).collect(Collectors.toList());
+        return getGetStoreRes(storeList);
+    }
+
+    /**
+     * 최소 주문 금액 이상 조회 오름차순
+     * @param categoryId
+     * @param lowBoundPrice
+     * @return
+     */
+    public List<GetStoreRes> retrieveStoreListByLowBoundPrice(Long categoryId, Integer lowBoundPrice) throws BaseException {
+        Sort sort = sortByLowBoundPrice();
+        //TODO 카테고리 더미데이터 넣으면 추가
+        //Optional<Category> category = categoryRepository.findById(categoryId);
+        //List<Store> storeList = (List<Store>) categoryStoreRepository.findAllByCategory(category);
+        List<Store> storeList =
+                (List<Store>) storeRepository.findByStatusAndLowBoundPriceGreaterThanEqual(1,lowBoundPrice,sort);
+
+        return getGetStoreRes(storeList);
+
+    }
+
+
+    private List<GetStoreRes> getGetStoreRes(List<Store> storeList) {
+        return storeList.stream().map(store -> {
+            Long id = store.getId();
+            String name = store.getName();
+            String location = store.getLocation();
+            Integer lowBoundPrice = store.getLowBoundPrice();
+            Integer deliveryFee = store.getDeliveryFee();
+            Float totalStarAverage = 5.0F; //가게 평점 구하기
+            String imageURL = store.getImageURL();
+            return GetStoreRes.builder()
+                    .id(id)
+                    .name(name)
+                    .location(location)
+                    .lowBoundPrice(lowBoundPrice)
+                    .deliveryFee(deliveryFee)
+                    .totalStarAverage(totalStarAverage) //가게 평점 해야된다.
+                    .imageURL(imageURL)
+                    .build();
+        }).collect(Collectors.toList());
     }
 
     private Sort sortByDeliveryFee() {
-        return Sort.by(Sort.Direction.DESC, "deliveryFee");
+        return Sort.by(Sort.Direction.ASC, "deliveryFee");
     }
+
+    private Sort sortByLowBoundPrice() {
+        return Sort.by(Sort.Direction.ASC, "lowBoundPrice");
+    }
+
 }
 

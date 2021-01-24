@@ -60,14 +60,14 @@ public class StoreService {
                 .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
 
         //이미지가 없을 경우 default 경로
-        String imageURI = null;
+        String imageURL = null;
         log.info(String.valueOf(imageFile));
 
         if(imageFile == null){
-            imageURI = FILE_UPLOAD_DIRECTORY +"/stores/default";
+            imageURL = FILE_UPLOAD_DIRECTORY +"/stores/default";
         }else{
             String filename = imageFile.getOriginalFilename();
-            imageURI = FILE_UPLOAD_DIRECTORY + "/stores/" + name+phoneNumber+filename;
+            imageURL = FILE_UPLOAD_DIRECTORY + "/stores/" + name+phoneNumber+filename;
             //TODO
             //imageFile.transferTo(new File(imageURI));
         }
@@ -80,7 +80,7 @@ public class StoreService {
                 .deliveryFee(deliveryFee)
                 .description(description)
                 .user(user)
-                .imageURI(imageURI)
+                .imageURL(imageURL)
                 .status(1)
                 .build();
 
@@ -102,7 +102,7 @@ public class StoreService {
                 .deliveryFee(newStore.getDeliveryFee())
                 .description(newStore.getDescription())
                 .user(newStore.getUser())
-                .imageURI(newStore.getImageURI())
+                .imageURL(newStore.getImageURL())
                 .build();
     }
 

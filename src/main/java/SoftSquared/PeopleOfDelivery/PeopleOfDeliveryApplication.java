@@ -50,7 +50,7 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.deliveryFee(3000)
 				.description("testCase입니다.")
 				.user(userRepository.findById(1L).orElseGet(null))
-				.imageURI("testURI")
+				.imageURL("testURI")
 				.status(1)
 				.build());
 		storeRepository.save(Store.builder()
@@ -62,7 +62,7 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.deliveryFee(4000)
 				.description("testCase2입니다.")
 				.user(userRepository.findById(1L).orElseGet(null))
-				.imageURI("testURI")
+				.imageURL("testURI")
 				.status(1)
 				.build());
 

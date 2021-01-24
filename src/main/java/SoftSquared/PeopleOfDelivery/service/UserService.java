@@ -74,7 +74,7 @@ public class UserService {
                 .birthdate(birthdate)
                 .gender(gender)
                 .status(1)
-                .imageURI("/img/users/default")
+                .imageURL("/img/users/default")
                 .build();
 
         // 3. 유저 정보 저장

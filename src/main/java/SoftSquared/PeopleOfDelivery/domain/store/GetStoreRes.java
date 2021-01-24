@@ -15,6 +15,6 @@ public class GetStoreRes {
     private final Integer lowBoundPrice;
     private final Integer deliveryFee;
     private final Float totalStarAverage;
-    private final String imageURI;
+    private final String imageURL;
 
 }

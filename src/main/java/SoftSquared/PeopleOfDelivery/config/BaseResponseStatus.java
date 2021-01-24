@@ -17,9 +17,13 @@ public enum BaseResponseStatus {
     SUCCESS_DELETE_USER(true, 1015, "회원 탈퇴에 성공하였습니다."),
     SUCCESS_PATCH_USER(true, 1016, "회원정보 수정에 성공하였습니다."),
     SUCCESS_READ_SEARCH_USERS(true, 1017, "회원 검색 조회에 성공하였습니다."),
-    SUCCESS_READ_STORES(true,1018,"상점 검색 조회에 성공하였습니다."),
+    SUCCESS_READ_STORES(true,1018,"상점 전체 검색 조회에 성공하였습니다."),
     SUCCESS_POST_STORE(true,1019,"상점 추가에 성공하였습니다."),
     SUCCESS_READ_STORE(true,1020,"상점 상세 검색에 성공하였습니다."),
+    SUCCESS_READ_DETAIL_STORES(true,1021,"상점 상세 조회에 성공하였습니다."),
+    SUCCESS_READ_STORES_BY_ORDER(true,1022,"상점 주문 많은 순 조회에 성공하였습니다."),
+    SUCCESS_READ_STORES_BY_DeliveryFeeLowBound(true,1023,"특정 배달료보다 낮은 순 상점 조회에 성공하였습니다."),
+    SUCCESS_READ_STORES_BY_DELIVERY_FEE_DESC(true,1024,"낮은 배달료 순서로 모든 상점 조회에 성공하였습니다."),
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
     EMPTY_USERID(false, 2001, "유저 아이디 값을 확인해주세요."),
@@ -42,7 +46,7 @@ public enum BaseResponseStatus {
     FAILED_TO_LOGIN(false, 3014, "로그인에 실패하였습니다."),
     FAILED_TO_DELETE_USER(false, 3015, "회원 탈퇴에 실패하였습니다."),
     FAILED_TO_PATCH_USER(false, 3016, "개인정보 수정에 실패하였습니다."),
-    FAILED_TO_GET_STORE(false, 3017, "상점 조회에 실패하였습니다."),
+    FAILED_TO_GET_STORES(false, 3017, "상점 조회에 실패하였습니다."),
     FAILED_TO_POST_STORE(false, 3018, "상점 가입에 실패하였습니다."),
     FAILED_TO_GET_DETAIL_STORE(false, 3019, "상점 상세 조회에 실패했습니다."),
     // 4000 : Database 오류

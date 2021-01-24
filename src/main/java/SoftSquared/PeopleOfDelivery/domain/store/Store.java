@@ -3,6 +3,8 @@ package SoftSquared.PeopleOfDelivery.domain.store;
 import SoftSquared.PeopleOfDelivery.config.BaseEntity;
 import SoftSquared.PeopleOfDelivery.domain.categoryStore.CategoryStore;
 import SoftSquared.PeopleOfDelivery.domain.menu.Menu;
+import SoftSquared.PeopleOfDelivery.domain.order.Orders;
+import SoftSquared.PeopleOfDelivery.domain.orderDetail.OrderDetail;
 import SoftSquared.PeopleOfDelivery.domain.pickStore.PickStore;
 import SoftSquared.PeopleOfDelivery.domain.review.Review;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
@@ -12,6 +14,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -69,15 +72,18 @@ public class Store extends BaseEntity {
     @JsonManagedReference("review_store_id")
     private List<Review> reviews;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "store",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonManagedReference("pick_store_store_id")
     private List<PickStore> pickStores;
+
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference("orders_store_id")
+    private List<Orders> orders;
 
     @ManyToOne
     @JsonBackReference("store_user_id")
     @JoinColumn(name = "user_id")
     private User user;
-
 
 
 }

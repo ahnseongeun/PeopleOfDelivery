@@ -11,9 +11,10 @@ public class GetStoreRes {
 
     private final Long id;
     private final String name;
-    private final String phoneNumber;
     private final String location;
-    private final Integer lowBoundDelivery;
+    private final Integer lowBoundPrice;
     private final Integer deliveryFee;
+    private final Float totalStarAverage;
+    private final String imageURI;
 
 }

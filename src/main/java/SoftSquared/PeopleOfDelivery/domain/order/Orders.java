@@ -4,6 +4,7 @@ import SoftSquared.PeopleOfDelivery.config.BaseEntity;
 import SoftSquared.PeopleOfDelivery.domain.orderDetail.OrderDetail;
 import SoftSquared.PeopleOfDelivery.domain.payment.Payment;
 import SoftSquared.PeopleOfDelivery.domain.review.Review;
+import SoftSquared.PeopleOfDelivery.domain.store.Store;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -50,6 +51,11 @@ public class Orders extends BaseEntity {
     @JoinColumn(name = "user_id",nullable = false)
     @JsonBackReference("orders_user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "store_id",nullable = false)
+    @JsonBackReference("orders_store_id")
+    private Store store;
 
     @OneToMany(mappedBy = "orders",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonManagedReference("review_order_id")

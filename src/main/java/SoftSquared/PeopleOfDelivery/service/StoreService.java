@@ -81,7 +81,7 @@ public class StoreService {
                 .description(description)
                 .user(user)
                 .imageURI(imageURI)
-                .status( 1)
+                .status(1)
                 .build();
 
         //store 정보 저장

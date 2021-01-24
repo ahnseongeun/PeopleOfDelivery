@@ -2,6 +2,7 @@ package SoftSquared.PeopleOfDelivery.controller;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
+import SoftSquared.PeopleOfDelivery.domain.menu.GetMenuRes;
 import SoftSquared.PeopleOfDelivery.domain.menu.GetMenusRes;
 import SoftSquared.PeopleOfDelivery.domain.menu.PostMenuRes;
 import SoftSquared.PeopleOfDelivery.domain.store.Store;
@@ -51,24 +52,22 @@ public class MenuController {
         }
     }
 
-//    /**
-//     * 메뉴 상세 조회
-//     */
-//    @ResponseBody
-//    @RequestMapping(value = "/menus/{menuId}",method = RequestMethod.GET)
-//    @ApiOperation(value = "메뉴 상세 조회 (회원 기능)", notes = "메뉴 상세 조회하기")
-//    public BaseResponse<List<GetMenusRes>> getMenus(
-//            @PathVariable String menuId){
-//
-//        List<GetMenusRes> getMenusResList;
-//
-//        try{
-//            getMenusResList = menuProvider.retrieveMenuList();
-//            return new BaseResponse<>(SUCCESS_READ_MENUS, getMenusResList);
-//        }catch(BaseException exception){
-//            return new BaseResponse<>(exception.getStatus());
-//        }
-//    }
+    /**
+     * 메뉴 상세 조회
+     */
+    @ResponseBody
+    @RequestMapping(value = "/menus/{menuId}",method = RequestMethod.GET)
+    @ApiOperation(value = "메뉴 상세 조회 (회원 기능)", notes = "메뉴 상세 조회하기")
+    public BaseResponse<GetMenuRes> getMenus(
+            @PathVariable Long menuId){
+        GetMenuRes getMenuRes;
+        try{
+            getMenuRes = menuProvider.retrieveMenu(menuId);
+            return new BaseResponse<>(SUCCESS_READ_MENU, getMenuRes);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 
     /**

@@ -50,7 +50,7 @@ public class Menu extends BaseEntity {
     private Integer imageStatus;
 
     /**
-     * 1은 일반 메뉴, 2는 대표 메뉴, 3은 인기 메뉴 , 10은 삭제
+     * 1은 일반 메뉴, 2는 대표 메뉴, 3은 인기 메뉴
      */
     @Column(name = "popular_check", nullable = false, columnDefinition = "Integer default 1")
     private Integer popularCheck;

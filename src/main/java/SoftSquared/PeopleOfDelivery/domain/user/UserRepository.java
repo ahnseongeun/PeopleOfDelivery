@@ -10,4 +10,6 @@ public interface UserRepository extends CrudRepository<User,Long> {
     List<User> findByStatusAndNameIsContaining(Integer status, String name);
     List<User> findByStatusAndEmailIsContaining(Integer status, String email);
     Optional<User> findById(Long userId);
+
+    Optional<User> findByIdAndStatus(Long userId, Integer status);
 }

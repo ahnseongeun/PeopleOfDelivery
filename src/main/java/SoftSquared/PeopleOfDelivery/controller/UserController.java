@@ -61,10 +61,10 @@ public class UserController {
      * @return BaseResponse<GetUserRes>
      */
     @ResponseBody
-    @RequestMapping(value = "/users/{userId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/users/{user-id}",method = RequestMethod.GET)
     @ApiOperation(value = "회원 프로필 조회 (회원 기능)", notes = "회원 프로필 조회")
     public BaseResponse<GetUserRes> getUser(
-            @PathVariable Long userId){
+            @PathVariable("user-id") Long userId){
         if(userId <= 0) {
             return new BaseResponse<>(EMPTY_USERID);
         }
@@ -128,6 +128,10 @@ public class UserController {
         }
     }
 
+
+    /**
+     * 로그인
+     */
 
     /**
      * 업데이트

@@ -2,6 +2,8 @@ package SoftSquared.PeopleOfDelivery.service;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.secret.Secret;
+import SoftSquared.PeopleOfDelivery.domain.coupon.Coupon;
+import SoftSquared.PeopleOfDelivery.domain.coupon.CouponRepository;
 import SoftSquared.PeopleOfDelivery.domain.user.PostUserRes;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
 import SoftSquared.PeopleOfDelivery.domain.user.UserRepository;
@@ -18,11 +20,15 @@ public class UserService {
 
 
     private final UserRepository userRepository;
+    private final CouponRepository couponRepository;
     private final UserProvider userProvider;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserProvider userProvider) {
+    public UserService(UserRepository userRepository,
+                       CouponRepository couponRepository,
+                       UserProvider userProvider) {
         this.userRepository = userRepository;
+        this.couponRepository = couponRepository;
         this.userProvider = userProvider;
     }
 
@@ -89,6 +95,20 @@ public class UserService {
 
         // 5. UserInfoLoginRes로 변환하여 return
         Long id = newUser.getId();
+
+        // 유저와 쿠폰은 1:1관계 여서 쿠폰 테이블도 같이 생성
+        Coupon coupon = Coupon.builder()
+                .coupon1000(0)
+                .coupon3000(0)
+                .coupon5000(0)
+                .user(newUser)
+                .build();
+        try {
+            couponRepository.save(coupon);
+        } catch (Exception exception) {
+            throw new BaseException(FAILED_TO_POST_COUPON);
+        }
+
         return PostUserRes.builder()
                 .id(id)
                 //.Jwt(jwt)

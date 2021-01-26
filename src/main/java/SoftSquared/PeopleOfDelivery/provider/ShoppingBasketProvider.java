@@ -6,6 +6,7 @@ import SoftSquared.PeopleOfDelivery.domain.menu.MenuRepository;
 import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.*;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
 import SoftSquared.PeopleOfDelivery.domain.user.UserRepository;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,7 +71,14 @@ public class ShoppingBasketProvider {
     }
 
 
-    public GetTotalPriceRes retrieveTotalPrice(Long userId) throws BaseException {
+    /**
+     * 장바구니 총 금액 구하기
+     * @param userId
+     * @param couponType
+     * @return
+     * @throws BaseException
+     */
+    public GetTotalPriceRes retrieveTotalPrice(Long userId, Integer couponType) throws BaseException {
 
         User user = userRepository.findByIdAndStatus(userId,1).orElseThrow(()
                 -> new BaseException(FAILED_TO_GET_USER));
@@ -80,11 +88,45 @@ public class ShoppingBasketProvider {
         if(shoppingBasketList.size() == 0) {
             throw new BaseException(EMPTY_MENU);
         }
+        int price = shoppingBasketList.stream()
+                .map(shoppingBasket
+                        -> shoppingBasket.getMenu().getPrice() * shoppingBasket.getMenuCount())
+                .mapToInt(value -> value).sum();
+
+        int presentCouponCount;
+        if(couponType == 1){
+            price -= 1000;
+            presentCouponCount = user.getCoupon().getCoupon1000();
+            user.getCoupon().setCoupon1000(presentCouponCount-1);
+            try{
+                userRepository.save(user);
+            }catch (Exception e){
+                throw new BaseException(FAILED_TO_UPDATE_USER);
+            }
+        }
+        if(couponType == 2){
+            price -= 3000;
+            presentCouponCount = user.getCoupon().getCoupon3000();
+            user.getCoupon().setCoupon3000(presentCouponCount-1);
+            try{
+                userRepository.save(user);
+            }catch (Exception e){
+                throw new BaseException(FAILED_TO_UPDATE_USER);
+            }
+        }
+        if(couponType == 3){
+            price -= 5000;
+            presentCouponCount = user.getCoupon().getCoupon5000();
+            user.getCoupon().setCoupon5000(presentCouponCount-1);
+            try{
+                userRepository.save(user);
+            }catch (Exception e){
+                throw new BaseException(FAILED_TO_UPDATE_USER);
+            }
+        }
+
         return GetTotalPriceRes.builder()
-                .totalPrice(shoppingBasketList.stream()
-                        .map(shoppingBasket
-                                -> shoppingBasket.getMenu().getPrice() * shoppingBasket.getMenuCount())
-                        .mapToInt(value -> value).sum())
+                .totalPrice(price)
                 .build();
     }
 }

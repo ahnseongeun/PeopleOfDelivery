@@ -59,10 +59,12 @@ public class ShoppingBasketController {
     @RequestMapping(value = "/baskets/total-price/{userId}",method = RequestMethod.GET)
     @ApiOperation(value = "회원 장바구니 총금액 조회 (회원 기능)", notes = "회원 장바구니 총금액 조회")
     public BaseResponse<GetTotalPriceRes> getBasketTotalPrice(
-            @PathVariable("userId") Long userId) throws BaseException{
+            @PathVariable("userId") Long userId,
+            @RequestParam(name = "couponType",required = false,defaultValue = "0") Integer couponType
+    ) throws BaseException{
         GetTotalPriceRes getTotalPriceRes;
         try{
-            getTotalPriceRes = shoppingBasketProvider.retrieveTotalPrice(userId);
+            getTotalPriceRes = shoppingBasketProvider.retrieveTotalPrice(userId,couponType);
             return new BaseResponse<>(SUCCESS_READ_SHOPPING_BASKET_TOTAL_PRICE, getTotalPriceRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());

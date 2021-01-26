@@ -53,6 +53,7 @@ public class OrderController {
             @RequestParam(name = "pgName") String pgName,
             @RequestParam(name = "pgType") String pgType,
             @RequestParam(name = "pgData") String pgData
+            //coupon1000 1, coupon 3000 2, coupon 5000 3
     ) throws BaseException {
 
         PostOrderRes postOrderRes;

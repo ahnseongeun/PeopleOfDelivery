@@ -102,7 +102,7 @@ public class OrderService {
                     orderDetail.orElseThrow(() ->new BaseException(FAILED_TO_POST_ORDER_DETAIL))));
         }
         log.info("주문 상세 생성");
-
+        log.info("결제 요청");
         /*
         결제 과정
          */
@@ -137,7 +137,7 @@ public class OrderService {
         }catch (Exception exception){
             throw new BaseException(FAILED_TO_UPDATE_ORDER);
         }
-        log.info("주문 업데이트");
+        log.info("주문 처리 완료 업데이트");
         //주문 상세 테이블 업데이트
         List<Long> updateOrderDetailList = new LinkedList<>();
 
@@ -154,7 +154,7 @@ public class OrderService {
                 throw new BaseException(FAILED_TO_UPDATE_ORDER_DETAIL);
             }
         }
-        log.info("주문 상세 업데이트");
+        log.info("주문 상세 처리 완료 업데이트");
         //장바구니 삭제
         for(Long id: basketId){
             ShoppingBasket updateBasket = shoppingBasketRepository

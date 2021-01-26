@@ -39,7 +39,7 @@ public class MenuService {
         //이미지가 없을 경우 default 경로
         String imageURL;
         Integer imageStatus;
-        log.info(String.valueOf(imageFile));
+        log.info("이미지 파일: " + String.valueOf(imageFile));
         if(imageFile == null){
             imageStatus = 2; //사용안함
             imageURL = FILE_UPLOAD_DIRECTORY +"/menu/default";

@@ -31,7 +31,8 @@ public enum BaseResponseStatus {
     SUCCESS_READ_SHOPPING_BASKET(true, 1019, "회원 장바구니 추가에 성공하였습니다."),
     SUCCESS_READ_SHOPPING_BASKET_TOTAL_PRICE(true, 1020, "회원 장바구니 총 금액 조회에 성공하였습니다."),
     SUCCESS_READ_ORDER(true, 1021, "주문에 성공하였습니다."),
-    
+    SUCCESS_READ_COUPON(true, 1022, "쿠폰 조회에  성공하였습니다."),
+
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
     EMPTY_USERID(false, 2001, "유저 아이디 값을 확인해주세요."),
@@ -71,7 +72,9 @@ public enum BaseResponseStatus {
     FAILED_TO_UPDATE_ORDER(false, 3035, "주문을 처리완료하는데 실패했습니다."),
     FAILED_TO_UPDATE_ORDER_DETAIL (false, 3035, "주문 상세를 처리완료하는데 실패했습니다."),
     FAILED_TO_DELETE_BASKET(false, 3035, "장바구니 삭제 실패했습니다."),
-
+    FAILED_TO_UPDATE_USER(false, 3035, "회원 수정에 실패했습니다."),
+    FAILED_TO_POST_COUPON(false, 3036, "회원 쿠폰 등록에 실패했습니다."),
+    FAILED_TO_GET_COUPON(false, 3037, " 쿠폰 조회에 실패했습니다."),
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),
     DATABASE_ERROR(false, 4001, "데이터베이스 연결에 실패하였습니다.");

@@ -3,6 +3,7 @@ package SoftSquared.PeopleOfDelivery.domain.user;
 import SoftSquared.PeopleOfDelivery.config.BaseEntity;
 import SoftSquared.PeopleOfDelivery.domain.coupon.Coupon;
 import SoftSquared.PeopleOfDelivery.domain.order.Orders;
+import SoftSquared.PeopleOfDelivery.domain.orderDetail.OrderDetail;
 import SoftSquared.PeopleOfDelivery.domain.pickStore.PickStore;
 import SoftSquared.PeopleOfDelivery.domain.review.Review;
 import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.ShoppingBasket;
@@ -87,6 +88,10 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference("orders_user_id")
     private List<Orders> orders;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference("order_detail_user_id")
+    private List<OrderDetail> orderDetails;
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonManagedReference("review_user_id")

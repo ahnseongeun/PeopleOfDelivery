@@ -57,7 +57,7 @@ public class StoreService {
             throws BaseException, IOException {
 
         User user = userrepository.findById(userId)
-                .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
 
         //이미지가 없을 경우 default 경로
         String imageURL = null;

@@ -28,8 +28,9 @@ public enum BaseResponseStatus {
     SUCCESS_READ_MENUS(true,1026,"전체 메뉴 조회에 성공하였습니다."),
     SUCCESS_POST_MENU(true, 1017, "메뉴 추가에 성공하였습니다."),
     SUCCESS_READ_MENU(true, 1018, "메뉴 상세 조회에 성공하였습니다."),
-    SUCCESS_READ_SHOPPING_BASKET(true, 1019, "회원 장바구니 조회에 성공하였습니다."),
-    
+    SUCCESS_READ_SHOPPING_BASKET(true, 1019, "회원 장바구니 추가에 성공하였습니다."),
+    SUCCESS_READ_SHOPPING_BASKET_TOTAL_PRICE(true, 1020, "회원 장바구니 총 금액 조회에 성공하였습니다."),
+
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
     EMPTY_USERID(false, 2001, "유저 아이디 값을 확인해주세요."),
@@ -42,6 +43,7 @@ public enum BaseResponseStatus {
     WRONG_PASSWORD(false, 2032, "비밀번호를 다시 입력해주세요."),
     DO_NOT_MATCH_PASSWORD(false, 2033, "비밀번호와 비밀번호확인 값이 일치하지 않습니다."),
     EMPTY_NICKNAME(false, 2040, "닉네임을 입력해주세요."),
+    EMPTY_MENU(false, 2041, "최소 한가지 메뉴를 장바구니에 추가해주세요"),
 
     // 3000 : Response 오류
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
@@ -58,8 +60,8 @@ public enum BaseResponseStatus {
     FAILED_TO_GET_MENUS(false, 3020, "전체 메뉴 조회에 실패했습니다."),
     FAILED_TO_GET_MENU(false, 3021, "메뉴 조회에 실패했습니다."),
     FAILED_TO_GET_BASKET(false, 3022, "회원 장바구니 조회에 실패했습니다."),
-    NOT_FOUND_STORE(false, 3023, "존재하지 않는 가게입니다."),
-
+    FAILED_TO_POST_SHOPPING_BASKET(false, 3023, "장바구니 조회에 실패 했습니다."),
+    NOT_FOUND_STORE(false, 3030, "존재하지 않는 가게입니다."),
 
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),

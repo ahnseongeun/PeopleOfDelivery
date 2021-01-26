@@ -1,13 +1,11 @@
 package SoftSquared.PeopleOfDelivery.provider;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
-import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.GetShoppingBasketMenuRes;
-import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.GetShoppingBasketRes;
-import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.ShoppingBasket;
-import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.ShoppingBasketRepository;
+import SoftSquared.PeopleOfDelivery.domain.menu.Menu;
+import SoftSquared.PeopleOfDelivery.domain.menu.MenuRepository;
+import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.*;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
 import SoftSquared.PeopleOfDelivery.domain.user.UserRepository;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +19,15 @@ public class ShoppingBasketProvider {
 
     private final ShoppingBasketRepository shoppingBasketRepository;
     private final UserRepository userRepository;
+    private final MenuRepository menuRepository;
 
     @Autowired
     public ShoppingBasketProvider(ShoppingBasketRepository shoppingBasketRepository,
-                                  UserRepository userRepository){
+                                  UserRepository userRepository,
+                                  MenuRepository menuRepository){
         this.shoppingBasketRepository = shoppingBasketRepository;
         this.userRepository = userRepository;
+        this.menuRepository = menuRepository;
     }
 
     /**
@@ -46,11 +47,17 @@ public class ShoppingBasketProvider {
                 -> new BaseException(FAILED_TO_GET_USER));
 
         List<ShoppingBasket> shoppingBasketList = shoppingBasketRepository.findByUserAndStatus(user,1);
-        ShoppingBasket shoppingBasketStore = shoppingBasketList.get(0);
+
+        ShoppingBasket shoppingBasketStore;
+
+        if(shoppingBasketList.size() == 0) {
+            throw new BaseException(EMPTY_MENU);
+        }
+        shoppingBasketStore = shoppingBasketList.get(0);
 
         return GetShoppingBasketRes.builder()
                 .storeName(shoppingBasketStore.getMenu().getStore().getName())
-                .totalPrice(10000)
+                //.totalPrice(10000)
                 .getShoppingBasketMenuResList(shoppingBasketList.stream().map(shoppingBasket ->
                         GetShoppingBasketMenuRes.builder()
                                 .id(shoppingBasket.getMenu().getId())
@@ -60,6 +67,26 @@ public class ShoppingBasketProvider {
                                 .menuCount(shoppingBasket.getMenuCount())
                                 .build()).collect(Collectors.toList()))
                 .userId(shoppingBasketStore.getUser().getId())
+                .build();
+    }
+
+
+    public GetTotalPriceRes retrieveTotalPrice(Long userId) throws BaseException {
+
+        User user = userRepository.findByIdAndStatus(userId,1).orElseThrow(()
+                -> new BaseException(FAILED_TO_GET_USER));
+
+        List<ShoppingBasket> shoppingBasketList = shoppingBasketRepository.findByUserAndStatus(user,1);
+
+        ShoppingBasket shoppingBasketStore;
+
+        if(shoppingBasketList.size() == 0) {
+            throw new BaseException(EMPTY_MENU);
+        }
+        return GetTotalPriceRes.builder()
+                .totalPrice(shoppingBasketList.stream()
+                        .map(shoppingBasket -> shoppingBasket.getMenu().getPrice() * shoppingBasket.getMenuCount())
+                        .mapToInt(value -> value).sum())
                 .build();
     }
 }

@@ -30,7 +30,7 @@ public class Orders extends BaseEntity {
     private Long id;
 
     @Column(name = "request_content",columnDefinition = "TEXT")
-    private String request_content;
+    private String requestContent;
 
     /**
      * null값이 들어오면 기본 유저정보에서 주소 등록
@@ -45,7 +45,7 @@ public class Orders extends BaseEntity {
      * 4. 삭제
      */
     @Column(name = "status",nullable = false)
-    private Byte status;
+    private Integer status;
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)

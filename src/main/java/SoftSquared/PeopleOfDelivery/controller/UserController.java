@@ -85,7 +85,7 @@ public class UserController {
      * @return BaseResponse<PostUserRes>
      */
     @ResponseBody
-    @RequestMapping(name = "/users", method = RequestMethod.POST)
+    @RequestMapping(value = "/users", method = RequestMethod.POST)
     @ApiOperation(value = "회원 가입 (회원 기능)", notes = "회원 가입")
     public BaseResponse<PostUserRes> CreateUser(
             @RequestParam(name = "name") String name,

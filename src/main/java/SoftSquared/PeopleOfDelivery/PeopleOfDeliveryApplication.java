@@ -66,41 +66,41 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.status(1)
 				.build());
 
-		ordersRepository.save(Orders.builder()
-				.id(1L)
-				.request_content("test1")
-				.user(userRepository.findById(1L).orElseGet(null))
-				.store(storeRepository.findById(1L).orElseGet(null))
-				.status((byte) 1)
-				.orderDetails(null)
-				.reviews(null)
-				.payment(null)
-				.address("test1")
-				.build());
-
-		ordersRepository.save(Orders.builder()
-				.id(2L)
-				.request_content("test12")
-				.user(userRepository.findById(1L).orElseGet(null))
-				.store(storeRepository.findById(2L).orElseGet(null))
-				.status((byte) 1)
-				.orderDetails(null)
-				.reviews(null)
-				.payment(null)
-				.address("test2")
-				.build());
-
-		ordersRepository.save(Orders.builder()
-				.id(3L)
-				.request_content("test3")
-				.user(userRepository.findById(1L).orElseGet(null))
-				.store(storeRepository.findById(2L).orElseGet(null))
-				.status((byte) 1)
-				.orderDetails(null)
-				.reviews(null)
-				.payment(null)
-				.address("test3")
-				.build());
+//		ordersRepository.save(Orders.builder()
+//				.id(1L)
+//				.requestContent("test1")
+//				.user(userRepository.findById(1L).orElseGet(null))
+//				.store(storeRepository.findById(1L).orElseGet(null))
+//				.status(1)
+//				.orderDetails(null)
+//				.reviews(null)
+//				.payment(null)
+//				.address("test1")
+//				.build());
+//
+//		ordersRepository.save(Orders.builder()
+//				.id(2L)
+//				.requestContent("test12")
+//				.user(userRepository.findById(1L).orElseGet(null))
+//				.store(storeRepository.findById(2L).orElseGet(null))
+//				.status(1)
+//				.orderDetails(null)
+//				.reviews(null)
+//				.payment(null)
+//				.address("test2")
+//				.build());
+//
+//		ordersRepository.save(Orders.builder()
+//				.id(3L)
+//				.requestContent("test3")
+//				.user(userRepository.findById(1L).orElseGet(null))
+//				.store(storeRepository.findById(2L).orElseGet(null))
+//				.status(1)
+//				.orderDetails(null)
+//				.reviews(null)
+//				.payment(null)
+//				.address("test3")
+//				.build());
 	}
 
 }

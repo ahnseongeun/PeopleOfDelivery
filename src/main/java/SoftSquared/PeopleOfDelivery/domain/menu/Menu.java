@@ -1,6 +1,7 @@
 package SoftSquared.PeopleOfDelivery.domain.menu;
 
 import SoftSquared.PeopleOfDelivery.config.BaseEntity;
+import SoftSquared.PeopleOfDelivery.domain.orderDetail.OrderDetail;
 import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.ShoppingBasket;
 import SoftSquared.PeopleOfDelivery.domain.store.Store;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -63,6 +64,10 @@ public class Menu extends BaseEntity {
     @OneToMany(mappedBy = "menu",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonBackReference("shopping_basket_menu_id")
     private List<ShoppingBasket> shoppingBaskets;
+
+    @OneToMany(mappedBy = "menu",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JsonBackReference("order_detail_menu_id")
+    private List<OrderDetail> orderDetails;
 
 
 }

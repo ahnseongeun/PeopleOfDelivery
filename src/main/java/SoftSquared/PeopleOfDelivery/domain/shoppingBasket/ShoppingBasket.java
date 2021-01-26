@@ -39,11 +39,11 @@ public class ShoppingBasket extends BaseEntity {
      * 3 삭제
      */
     @Column(name = "status",nullable = false)
-    private Byte status;
+    private Integer status;
 
-    @OneToMany(mappedBy = "shoppingBasket", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference("order_detail_shopping_basket_id")
-    private List<OrderDetail> orderDetails;
+//    @OneToMany(mappedBy = "shoppingBasket", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JsonManagedReference("order_detail_shopping_basket_id")
+//    private List<OrderDetail> orderDetails;
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)

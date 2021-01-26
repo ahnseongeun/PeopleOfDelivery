@@ -62,6 +62,14 @@ public enum BaseResponseStatus {
     FAILED_TO_GET_BASKET(false, 3022, "회원 장바구니 조회에 실패했습니다."),
     FAILED_TO_POST_SHOPPING_BASKET(false, 3023, "장바구니 조회에 실패 했습니다."),
     NOT_FOUND_STORE(false, 3030, "존재하지 않는 가게입니다."),
+    FAILED_TO_POST_ORDER_DETAIL(false, 3031, "주문 상세 추가에 실패했습니다."),
+    FAILED_TO_POST_PAYMENT(false, 3032, "결제에 실패했습니다."),
+    FAILED_TO_GET_ORDER(false, 3033, "주문 목록을 가져오는데 실패했습니다."),
+    FAILED_TO_POST_ORDER(false, 3034, "주문하는데 실패했습니다."),
+    FAILED_TO_GET_ORDER_DETAIL(false, 3035, "주문 상세를 가져오는데 실패했습니다."),
+    FAILED_TO_UPDATE_ORDER(false, 3035, "주문을 처리완료하는데 실패했습니다."),
+    FAILED_TO_UPDATE_ORDER_DETAIL (false, 3035, "주문 상세를 처리완료하는데 실패했습니다."),
+    FAILED_TO_DELETE_BASKET(false, 3035, "장바구니 삭제 실패했습니다."),
 
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),

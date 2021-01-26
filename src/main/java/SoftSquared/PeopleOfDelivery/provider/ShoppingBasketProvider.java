@@ -57,7 +57,6 @@ public class ShoppingBasketProvider {
 
         return GetShoppingBasketRes.builder()
                 .storeName(shoppingBasketStore.getMenu().getStore().getName())
-                //.totalPrice(10000)
                 .getShoppingBasketMenuResList(shoppingBasketList.stream().map(shoppingBasket ->
                         GetShoppingBasketMenuRes.builder()
                                 .id(shoppingBasket.getMenu().getId())
@@ -78,14 +77,13 @@ public class ShoppingBasketProvider {
 
         List<ShoppingBasket> shoppingBasketList = shoppingBasketRepository.findByUserAndStatus(user,1);
 
-        ShoppingBasket shoppingBasketStore;
-
         if(shoppingBasketList.size() == 0) {
             throw new BaseException(EMPTY_MENU);
         }
         return GetTotalPriceRes.builder()
                 .totalPrice(shoppingBasketList.stream()
-                        .map(shoppingBasket -> shoppingBasket.getMenu().getPrice() * shoppingBasket.getMenuCount())
+                        .map(shoppingBasket
+                                -> shoppingBasket.getMenu().getPrice() * shoppingBasket.getMenuCount())
                         .mapToInt(value -> value).sum())
                 .build();
     }

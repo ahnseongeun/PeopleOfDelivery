@@ -45,7 +45,7 @@ public class Payment extends BaseEntity {
      * 결제금액
      */
     @Column(name = "pg_price", nullable = false)
-    private Long pgPrice;
+    private Integer pgPrice;
 
     @OneToOne
     @JsonBackReference("payment_order_id")
@@ -56,7 +56,7 @@ public class Payment extends BaseEntity {
      * 1은 처리완료, 2는 삭제
      */
     @Column(name = "status",nullable = false)
-    private Byte status;
+    private Integer status;
 
 
 }

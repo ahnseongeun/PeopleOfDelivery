@@ -5,19 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
 public class PostOrderRes {
 
-    private final Long id;
-    private final String name;
-    private final String phoneNumber;
-    private final String location;
-    private final Integer lowBoundDelivery;
-    private final Integer deliveryFee;
-    private final String description;
-    private final Integer userId;
-    private final String imageURL;
-    private final User user;
+    private final Long orderId;
+    private final List<Long> orderDetailIdList;
+    private final Long paymentId;
 }

@@ -45,13 +45,18 @@ public class OrderController {
             @RequestParam(name = "userId") Long userId,
             @RequestParam(name = "storeId") Long storeId,
             @RequestParam(name = "address") String address,
-            @RequestParam(name = "BasketId") List<Long> BasketId
+            @RequestParam(name = "totalPrice") Integer totalPrice,
+            @RequestParam(name = "BasketId") List<Long> BasketId,
+            @RequestParam(name = "pgName") String pgName,
+            @RequestParam(name = "pgType") String pgType,
+            @RequestParam(name = "pgData") String pgData
     ) throws BaseException {
 
         PostOrderRes postOrderRes;
 
         try{
-            postOrderRes = orderService.createOrder(requestContent,userId,address,storeId,BasketId);
+            postOrderRes = orderService.createOrder(
+                    requestContent,userId,address,storeId,totalPrice,BasketId,pgName,pgType,pgData);
             return new BaseResponse<>(SUCCESS_READ_SHOPPING_BASKET, postOrderRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());

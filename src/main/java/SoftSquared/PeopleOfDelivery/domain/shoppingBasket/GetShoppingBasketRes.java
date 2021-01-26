@@ -17,5 +17,4 @@ public class GetShoppingBasketRes {
     private final String storeName;
     private final Long userId;
     private final List<GetShoppingBasketMenuRes> getShoppingBasketMenuResList;
-    private final Integer totalPrice;
 }

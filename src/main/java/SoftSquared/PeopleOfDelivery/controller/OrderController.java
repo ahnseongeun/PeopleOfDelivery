@@ -2,31 +2,32 @@ package SoftSquared.PeopleOfDelivery.controller;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
-import SoftSquared.PeopleOfDelivery.domain.menu.PostMenuReq;
+import SoftSquared.PeopleOfDelivery.domain.order.GetOrderRes;
 import SoftSquared.PeopleOfDelivery.domain.order.PostOrderRes;
-import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.PostShoppingBasketRes;
+import SoftSquared.PeopleOfDelivery.provider.OrderProvider;
 import SoftSquared.PeopleOfDelivery.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.SUCCESS_READ_ORDER;
+import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.SUCCESS_READ_ORDERLIST_BY_USER;
 
 @Controller
 @RequestMapping(value = "/api")
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderProvider orderProvider;
 
     @Autowired
-    public OrderController(OrderService orderService){
+    public OrderController(OrderService orderService,
+                           OrderProvider orderProvider){
         this.orderService = orderService;
+        this.orderProvider = orderProvider;
     }
 
     /**
@@ -36,6 +37,21 @@ public class OrderController {
     /**
      * 회원 주문내역 조회
      */
+    @ResponseBody
+    @RequestMapping(value = "/orders/{userId}",method = RequestMethod.GET)
+    @ApiOperation(value = "회원 주문내역 조회", notes = "회원 주문내역 조회")
+    public BaseResponse<List<GetOrderRes>> getOrders(
+            @PathVariable Long userId){
+
+        List<GetOrderRes> getOrderResList;
+
+        try{
+            getOrderResList = orderProvider.retrieveOrderList(userId);
+            return new BaseResponse<>(SUCCESS_READ_ORDERLIST_BY_USER, getOrderResList);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
     /**
      * 주문 추가

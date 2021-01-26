@@ -33,6 +33,7 @@ public enum BaseResponseStatus {
     SUCCESS_READ_ORDER(true, 1021, "주문에 성공하였습니다."),
     SUCCESS_READ_COUPON(true, 1022, "쿠폰 조회에  성공하였습니다."),
     SUCCESS_PATCH_COUPON(true, 1023, "쿠폰 갱신에  성공하였습니다."),
+    SUCCESS_READ_ORDERLIST_BY_USER(true, 1024, "회원 주문 내역조회에 성공했습니다."),
 
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
@@ -47,6 +48,7 @@ public enum BaseResponseStatus {
     DO_NOT_MATCH_PASSWORD(false, 2033, "비밀번호와 비밀번호확인 값이 일치하지 않습니다."),
     EMPTY_NICKNAME(false, 2040, "닉네임을 입력해주세요."),
     EMPTY_MENU(false, 2041, "최소 한가지 메뉴를 장바구니에 추가해주세요"),
+    EMPTY_ORDERLIST(false, 2042, "주문 내역이 비었습니다."),
 
     // 3000 : Response 오류
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),

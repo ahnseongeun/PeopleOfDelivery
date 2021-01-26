@@ -8,6 +8,7 @@ import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.PostShoppingBasketRes;
 import SoftSquared.PeopleOfDelivery.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.SUCCESS_READ_SHOPPING_BASKET;
+import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.SUCCESS_READ_ORDER;
 
+@Controller
+@RequestMapping(value = "/api")
 public class OrderController {
 
     private final OrderService orderService;
@@ -44,7 +47,7 @@ public class OrderController {
             @RequestParam(name = "requestContent") String requestContent,
             @RequestParam(name = "userId") Long userId,
             @RequestParam(name = "storeId") Long storeId,
-            @RequestParam(name = "address") String address,
+            @RequestParam(name = "address",required = false) String address,
             @RequestParam(name = "totalPrice") Integer totalPrice,
             @RequestParam(name = "BasketId") List<Long> BasketId,
             @RequestParam(name = "pgName") String pgName,
@@ -57,7 +60,7 @@ public class OrderController {
         try{
             postOrderRes = orderService.createOrder(
                     requestContent,userId,address,storeId,totalPrice,BasketId,pgName,pgType,pgData);
-            return new BaseResponse<>(SUCCESS_READ_SHOPPING_BASKET, postOrderRes);
+            return new BaseResponse<>(SUCCESS_READ_ORDER, postOrderRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }

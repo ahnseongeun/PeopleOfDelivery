@@ -78,6 +78,7 @@ public class OrderService {
         Orders newOrder;
         try{
             newOrder = ordersRepository.save(orders);
+            log.info("주문 생성");
         }catch (Exception exception){
             throw new BaseException(FAILED_TO_POST_STORE);
         }
@@ -89,6 +90,7 @@ public class OrderService {
                                 .menu(shoppingBasket.getMenu())
                                 .menuCount(shoppingBasket.getMenuCount())
                                 .user(shoppingBasket.getUser())
+                                .orders(newOrder)
                                 .status(1)
                                 .build()))
                 .collect(Collectors.toList());
@@ -99,6 +101,7 @@ public class OrderService {
             newOrderDetailList.add(orderDetailRepository.save(
                     orderDetail.orElseThrow(() ->new BaseException(FAILED_TO_POST_ORDER_DETAIL))));
         }
+        log.info("주문 상세 생성");
 
         /*
         결제 과정
@@ -118,7 +121,7 @@ public class OrderService {
         }catch (Exception exception){
             throw new BaseException(FAILED_TO_POST_PAYMENT);
         }
-
+        log.info("결제 완료");
         /*
         결제가 완료되면 주문 테이블과 주문 상세 테이블 처리완료로 상태 업데이트 및 장바구니 삭제 처리
          */
@@ -134,7 +137,7 @@ public class OrderService {
         }catch (Exception exception){
             throw new BaseException(FAILED_TO_UPDATE_ORDER);
         }
-
+        log.info("주문 업데이트");
         //주문 상세 테이블 업데이트
         List<Long> updateOrderDetailList = new LinkedList<>();
 
@@ -151,7 +154,7 @@ public class OrderService {
                 throw new BaseException(FAILED_TO_UPDATE_ORDER_DETAIL);
             }
         }
-
+        log.info("주문 상세 업데이트");
         //장바구니 삭제
         for(Long id: basketId){
             ShoppingBasket updateBasket = shoppingBasketRepository

@@ -30,7 +30,8 @@ public enum BaseResponseStatus {
     SUCCESS_READ_MENU(true, 1018, "메뉴 상세 조회에 성공하였습니다."),
     SUCCESS_READ_SHOPPING_BASKET(true, 1019, "회원 장바구니 추가에 성공하였습니다."),
     SUCCESS_READ_SHOPPING_BASKET_TOTAL_PRICE(true, 1020, "회원 장바구니 총 금액 조회에 성공하였습니다."),
-
+    SUCCESS_READ_ORDER(true, 1021, "주문에 성공하였습니다."),
+    
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
     EMPTY_USERID(false, 2001, "유저 아이디 값을 확인해주세요."),

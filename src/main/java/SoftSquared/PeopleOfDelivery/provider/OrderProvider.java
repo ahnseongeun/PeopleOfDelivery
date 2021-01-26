@@ -51,7 +51,8 @@ public class OrderProvider {
         User user = userRepository.findByIdAndStatus(userId,1).orElseThrow(()
                 -> new BaseException(FAILED_TO_GET_USER));
 
-        List<Orders> orderList = ordersRepository.findUserAndStatus(user,1);
+        List<Orders> orderList = ordersRepository.findByUserAndStatus(user,2);
+        log.info(String.valueOf(orderList.size()));
 /*
     private final String storeName;
     private final String menuName;

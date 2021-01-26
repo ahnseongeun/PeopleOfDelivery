@@ -12,7 +12,7 @@ public interface OrdersRepository extends CrudRepository<Orders,Long> {
 
     Optional<Orders> findByIdAndStatus(Long id, Integer status);
 
-    List<Orders> findUserAndStatus(User user, Integer status);
+    List<Orders> findByUserAndStatus(User user, Integer status);
 
     //List<OrderS> findUserAndStatus(User user,Integer status);
 }

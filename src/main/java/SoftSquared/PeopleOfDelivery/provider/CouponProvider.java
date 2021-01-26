@@ -4,28 +4,29 @@ import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.domain.coupon.Coupon;
 import SoftSquared.PeopleOfDelivery.domain.coupon.CouponRepository;
 import SoftSquared.PeopleOfDelivery.domain.coupon.GetCouponRes;
-import SoftSquared.PeopleOfDelivery.domain.menu.GetMenusRes;
-import SoftSquared.PeopleOfDelivery.domain.menu.Menu;
-import SoftSquared.PeopleOfDelivery.domain.menu.MenuRepository;
+import SoftSquared.PeopleOfDelivery.domain.user.User;
+import SoftSquared.PeopleOfDelivery.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.FAILED_TO_GET_COUPON;
-import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.FAILED_TO_GET_MENUS;
+import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.FAILED_TO_GET_USER;
 
 @Service
 public class CouponProvider {
 
     private final CouponRepository couponRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public CouponProvider(CouponRepository couponRepository){
+    public CouponProvider(CouponRepository couponRepository,
+                          UserRepository userRepository){
 
         this.couponRepository = couponRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -59,9 +60,11 @@ public class CouponProvider {
      * @throws BaseException
      */
     public GetCouponRes retrieveCoupon(Long userId) throws BaseException {
-        Coupon coupon;
 
-            coupon = couponRepository.findById(userId)
+        User user = userRepository.findByIdAndStatus(userId,1)
+                    .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        Coupon coupon = couponRepository.findByUser(user)
                     .orElseThrow(() -> new BaseException(FAILED_TO_GET_COUPON));
 
 

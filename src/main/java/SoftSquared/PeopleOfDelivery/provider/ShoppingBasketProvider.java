@@ -88,16 +88,19 @@ public class ShoppingBasketProvider {
         if(shoppingBasketList.size() == 0) {
             throw new BaseException(EMPTY_MENU);
         }
+        ShoppingBasket basket = shoppingBasketList.get(0);
+
         int price = shoppingBasketList.stream()
                 .map(shoppingBasket
                         -> shoppingBasket.getMenu().getPrice() * shoppingBasket.getMenuCount())
                 .mapToInt(value -> value).sum();
 
-        int presentCouponCount;
+        //default = 0;
+        int usedCoupon = 0;
+
         if(couponType == 1){
             price -= 1000;
-            presentCouponCount = user.getCoupon().getCoupon1000();
-            user.getCoupon().setCoupon1000(presentCouponCount-1);
+            usedCoupon = 1;
             try{
                 userRepository.save(user);
             }catch (Exception e){
@@ -106,8 +109,7 @@ public class ShoppingBasketProvider {
         }
         if(couponType == 2){
             price -= 3000;
-            presentCouponCount = user.getCoupon().getCoupon3000();
-            user.getCoupon().setCoupon3000(presentCouponCount-1);
+            usedCoupon = 2;
             try{
                 userRepository.save(user);
             }catch (Exception e){
@@ -116,8 +118,7 @@ public class ShoppingBasketProvider {
         }
         if(couponType == 3){
             price -= 5000;
-            presentCouponCount = user.getCoupon().getCoupon5000();
-            user.getCoupon().setCoupon5000(presentCouponCount-1);
+            usedCoupon = 3;
             try{
                 userRepository.save(user);
             }catch (Exception e){
@@ -127,6 +128,8 @@ public class ShoppingBasketProvider {
 
         return GetTotalPriceRes.builder()
                 .totalPrice(price)
+                .usedCoupon(usedCoupon)
+                .storeId(basket.getMenu().getStore().getId())
                 .build();
     }
 }

@@ -9,5 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GetTotalPriceRes {
 
+    private Integer usedCoupon;
     private Integer totalPrice;
+    private Long storeId;
 }

@@ -61,7 +61,7 @@ public class CouponController {
      */
     @ResponseBody
     @RequestMapping(value = "/coupons/{userId}",method = RequestMethod.GET)
-    @ApiOperation(value = "내 쿠폰 조회 (관리자 기능)", notes = "내 쿠폰 목록 불러오기")
+    @ApiOperation(value = "내 쿠폰 조회" , notes = "내 쿠폰 목록 불러오기")
     public BaseResponse<GetCouponRes> getCoupon(
             @PathVariable Long userId){
 
@@ -78,6 +78,25 @@ public class CouponController {
     /**
      * 쿠폰 수정하기
      */
+    @ResponseBody
+    @RequestMapping(value = "/coupons/{userId}",method = RequestMethod.PATCH)
+    @ApiOperation(value = " 쿠폰 수정하기 ", notes = " 쿠폰 수정하기")
+    public BaseResponse<GetCouponRes> updateCoupon(
+            @PathVariable Long userId,
+            @RequestParam(value = "coupon1000Count",required = false,defaultValue = "false") boolean coupon1000Count,
+            @RequestParam(value = "coupon3000Count",required = false,defaultValue = "false") boolean coupon3000Count,
+            @RequestParam(value = "coupon5000Count",required = false,defaultValue = "false") boolean coupon5000Count) throws BaseException{
 
+        GetCouponRes getCouponRes;
+
+        try{
+            getCouponRes = couponService.updateCoupon(
+                    userId, coupon1000Count, coupon3000Count,coupon5000Count
+            );
+            return new BaseResponse<>(SUCCESS_PATCH_COUPON, getCouponRes);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 }

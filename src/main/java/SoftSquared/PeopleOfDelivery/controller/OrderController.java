@@ -49,6 +49,7 @@ public class OrderController {
             @RequestParam(name = "storeId") Long storeId,
             @RequestParam(name = "address",required = false) String address,
             @RequestParam(name = "totalPrice") Integer totalPrice,
+            @RequestParam(name = "couponType") Integer couponType,
             @RequestParam(name = "BasketId") List<Long> BasketId,
             @RequestParam(name = "pgName") String pgName,
             @RequestParam(name = "pgType") String pgType,

@@ -61,6 +61,7 @@ public class ShoppingBasketController {
     public BaseResponse<GetTotalPriceRes> getBasketTotalPrice(
             @PathVariable("userId") Long userId,
             @RequestParam(name = "couponType",required = false,defaultValue = "0") Integer couponType
+            //1은 1000원 , 2는 3000원, 3은 5000원
     ) throws BaseException{
         GetTotalPriceRes getTotalPriceRes;
         try{

@@ -3,10 +3,8 @@ package SoftSquared.PeopleOfDelivery.controller;
 import SoftSquared.PeopleOfDelivery.config.BaseEntity;
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
-import SoftSquared.PeopleOfDelivery.domain.store.GetDetailStoreRes;
-import SoftSquared.PeopleOfDelivery.domain.store.GetStoreRes;
-import SoftSquared.PeopleOfDelivery.domain.store.PostStoreRes;
-import SoftSquared.PeopleOfDelivery.domain.store.Store;
+import SoftSquared.PeopleOfDelivery.domain.store.*;
+import SoftSquared.PeopleOfDelivery.domain.user.DeleteUserRes;
 import SoftSquared.PeopleOfDelivery.domain.user.GetUserRes;
 import SoftSquared.PeopleOfDelivery.domain.user.PostUserRes;
 import SoftSquared.PeopleOfDelivery.provider.StoreProvider;
@@ -175,12 +173,48 @@ public class StoreController {
     }
 
     /**
-     * 업데이트
+     * 상점 수정
      */
+    @ResponseBody
+    @RequestMapping(value = "/stores/{storeId}",method = RequestMethod.PATCH)
+    @ApiOperation(value = "상점 수정 (가게 주인)", notes = "상점 수정")
+    public BaseResponse<PostStoreRes> updateStore (
+            @PathVariable Long storeId,
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "phoneNumber") String phoneNumber,
+            @RequestParam(value = "location") String location,
+            @RequestParam(value = "lowBoundPrice") Integer lowBoundPrice,
+            @RequestParam(value = "deliveryFee") Integer deliveryFee,
+            @RequestParam(value = "description") String description,
+            @RequestParam(value = "userId") Long userId,
+            @RequestParam(value = "imageFile",required = false) MultipartFile imageFile) throws IOException{
+
+        try {
+            PostStoreRes postStoreRes = storeService.updateStore(
+                    storeId,name,phoneNumber,location,lowBoundPrice,deliveryFee,description,userId,imageFile);
+            return new BaseResponse<>(SUCCESS_UPDATE_STORE, postStoreRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
     /**
-     * 삭제
+     * 상점 삭제
      */
+    @ResponseBody
+    @RequestMapping(value = "/stores/{storeId}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "상점 삭제(가게점주 기능)", notes = "상점 삭제")
+    public BaseResponse<DeleteStoreRes> DeleteUser(
+            @PathVariable Long storeId) throws BaseException{
+
+        // 2. Post UserInfo
+        try {
+            DeleteStoreRes deleteStoreRes = storeService.deleteStore(storeId);
+            return new BaseResponse<>(SUCCESS_DELETE_STORE, deleteStoreRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 
 }

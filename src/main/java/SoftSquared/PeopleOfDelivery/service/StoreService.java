@@ -1,6 +1,7 @@
 package SoftSquared.PeopleOfDelivery.service;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
+import SoftSquared.PeopleOfDelivery.domain.store.DeleteStoreRes;
 import SoftSquared.PeopleOfDelivery.domain.store.PostStoreRes;
 import SoftSquared.PeopleOfDelivery.domain.store.Store;
 import SoftSquared.PeopleOfDelivery.domain.store.StoreRepository;
@@ -101,9 +102,83 @@ public class StoreService {
                 .lowBoundDelivery(newStore.getLowBoundPrice())
                 .deliveryFee(newStore.getDeliveryFee())
                 .description(newStore.getDescription())
-                .user(newStore.getUser())
+                .userId(newStore.getUser().getId())
                 .imageURL(newStore.getImageURL())
                 .build();
     }
 
+    public PostStoreRes updateStore(Long storeId,
+                                    String name,
+                                    String phoneNumber,
+                                    String location,
+                                    Integer lowBoundPrice,
+                                    Integer deliveryFee,
+                                    String description,
+                                    Long userId,
+                                    MultipartFile imageFile) throws BaseException {
+
+        User user = userrepository.findById(userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        Store store = storeRepository.findByIdAndStatus(storeId,1)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_STORES));
+
+        //이미지가 없을 경우 default 경로
+        String imageURL;
+        log.info(String.valueOf(imageFile));
+
+        if(imageFile == null){
+            imageURL = store.getImageURL();
+        }else{
+            String filename = imageFile.getOriginalFilename();
+            imageURL = FILE_UPLOAD_DIRECTORY + "/stores/" + name+phoneNumber+filename;
+            //TODO
+            //imageFile.transferTo(new File(imageURI));
+        }
+
+        store.setName(name)
+                .setPhoneNumber(phoneNumber)
+                .setLocation(location)
+                .setLowBoundPrice(lowBoundPrice)
+                .setDeliveryFee(deliveryFee)
+                .setDescription(description)
+                .setUser(user)
+                .setImageURL(imageURL);
+
+        Store newStore;
+        try{
+            newStore = storeRepository.save(store);
+        }catch (Exception exception){
+            throw new BaseException(FAILED_TO_UPDATE_STORE);
+        }
+
+        //PostStoreRes 반환
+        return PostStoreRes.builder()
+                .id(newStore.getId())
+                .name(newStore.getName())
+                .phoneNumber(newStore.getPhoneNumber())
+                .location(newStore.getLocation())
+                .lowBoundDelivery(newStore.getLowBoundPrice())
+                .deliveryFee(newStore.getDeliveryFee())
+                .description(newStore.getDescription())
+                .userId(newStore.getUser().getId())
+                .imageURL(newStore.getImageURL())
+                .build();
+
+    }
+
+    public DeleteStoreRes deleteStore(Long storeId) throws BaseException {
+
+        Store store = storeRepository.findByIdAndStatus(storeId,1)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_STORES));
+
+        store.setStatus(2);
+
+        store = storeRepository.save(store);
+
+        return DeleteStoreRes.builder()
+                .storeId(store.getId())
+                .status(store.getStatus())
+                .build();
+    }
 }

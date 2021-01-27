@@ -3,9 +3,7 @@ package SoftSquared.PeopleOfDelivery.service;
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.domain.menu.Menu;
 import SoftSquared.PeopleOfDelivery.domain.menu.MenuRepository;
-import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.PostShoppingBasketRes;
-import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.ShoppingBasket;
-import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.ShoppingBasketRepository;
+import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.*;
 import SoftSquared.PeopleOfDelivery.domain.store.Store;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
 import SoftSquared.PeopleOfDelivery.domain.user.UserRepository;
@@ -30,6 +28,13 @@ public class ShoppingBasketService {
         this.menuRepository = menuRepository;
     }
 
+    /**
+     * 장바구니에 메뉴 추가
+     * @param userId
+     * @param menuId
+     * @return
+     * @throws BaseException
+     */
     public PostShoppingBasketRes createShoppingBasket(Long userId, Long menuId)
             throws BaseException {
 
@@ -61,5 +66,70 @@ public class ShoppingBasketService {
                 .menuCount(newShoppingBasket.getMenuCount())
                 .build();
 
+    }
+
+    /**
+     * 장바구니 수정
+     * @param basketId
+     * @param count
+     * @param operationCheck
+     * @return
+     * @throws BaseException
+     */
+    public UpdateShoppingBasketRes updateShoppingBasket(Long basketId,
+                                                        boolean operationCheck) throws BaseException{
+
+        ShoppingBasket shoppingBasket = shoppingBasketRepository.findByIdAndStatus(basketId,1)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_BASKET));
+
+        int menuCount = shoppingBasket.getMenuCount();
+
+        if(operationCheck) {//플러스
+            menuCount += 1;
+            shoppingBasket.setMenuCount(menuCount);
+        }else{
+            if(menuCount > 1) {
+                menuCount -= 1;
+                shoppingBasket.setMenuCount(menuCount);
+            }
+        }
+
+        try{
+            shoppingBasketRepository.save(shoppingBasket);
+        }catch (Exception e){
+            throw new BaseException(FAILED_TO_UPDATE_BASKET);
+        }
+
+        return UpdateShoppingBasketRes.builder()
+                .shoppingBasketId(shoppingBasket.getId())
+                .menuId(shoppingBasket.getMenu().getId())
+                .menuName(shoppingBasket.getMenu().getName())
+                .menuCount(shoppingBasket.getMenuCount())
+                .totalMenuPrice(shoppingBasket.getMenu().getPrice()*(menuCount))
+                .build();
+    }
+
+    /**
+     * 장바구니 삭제
+     * @param basketId
+     * @return
+     */
+    public DeleteShoppingBasketRes deleteShoppingBasket(Long basketId) throws BaseException {
+
+        ShoppingBasket shoppingBasket = shoppingBasketRepository.findByIdAndStatus(basketId,1)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_BASKET));
+
+        shoppingBasket.setStatus(2);
+
+        try{
+            shoppingBasketRepository.save(shoppingBasket);
+        }catch (Exception e){
+            throw new BaseException(FAILED_TO_DELETE_BASKET);
+        }
+
+        return DeleteShoppingBasketRes.builder()
+                .shoppingBasketId(shoppingBasket.getId())
+                .status(shoppingBasket.getStatus())
+                .build();
     }
 }

@@ -3,9 +3,7 @@ package SoftSquared.PeopleOfDelivery.controller;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
-import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.GetShoppingBasketRes;
-import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.GetTotalPriceRes;
-import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.PostShoppingBasketRes;
+import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.*;
 import SoftSquared.PeopleOfDelivery.provider.ShoppingBasketProvider;
 import SoftSquared.PeopleOfDelivery.service.ShoppingBasketService;
 import io.swagger.annotations.ApiOperation;
@@ -90,4 +88,46 @@ public class ShoppingBasketController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    /**
+     * 장바구니 수정
+     */
+    @ResponseBody
+    @RequestMapping(value = "/baskets/{basketId}",method = RequestMethod.PATCH)
+    @ApiOperation(value = "장바구니 메뉴 수정 (회원 기능)", notes = "장바구니 메뉴 수정")
+    public BaseResponse<UpdateShoppingBasketRes> updateBasket(
+            @PathVariable Long basketId,
+            @RequestParam(value = "operationCheck",required = false,defaultValue = "true") boolean operationCheck
+            ) throws BaseException {
+
+        UpdateShoppingBasketRes updateShoppingBasketRes;
+
+        try{
+            updateShoppingBasketRes = shoppingBasketService.updateShoppingBasket(basketId, operationCheck);
+            return new BaseResponse<>(SUCCESS_UPDATE_SHOPPING_BASKET, updateShoppingBasketRes);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 장바구니 삭제
+     */
+    @ResponseBody
+    @RequestMapping(value = "/baskets/{basketId}",method = RequestMethod.DELETE)
+    @ApiOperation(value = "장바구니 메뉴 삭제 (회원 기능)", notes = "장바구니 메뉴 삭제")
+    public BaseResponse<DeleteShoppingBasketRes> deleteBasket(
+            @PathVariable Long basketId
+    ) throws BaseException {
+
+        DeleteShoppingBasketRes deleteShoppingBasketRes;
+
+        try{
+            deleteShoppingBasketRes = shoppingBasketService.deleteShoppingBasket(basketId);
+            return new BaseResponse<>(SUCCESS_DELETE_SHOPPING_BASKET, deleteShoppingBasketRes);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+    
 }

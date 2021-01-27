@@ -30,6 +30,8 @@ public class CouponService {
 
     /**
      * 내 쿠폰 수정하기
+     *
+     * @param operationCheck
      * @param coupon1000Count
      * @param coupon3000Count
      * @param coupon5000Count
@@ -37,9 +39,10 @@ public class CouponService {
      * @throws BaseException
      */
     public GetCouponRes updateCoupon(Long userId,
-                                     boolean coupon1000Count,
-                                     boolean coupon3000Count,
-                                     boolean coupon5000Count) throws BaseException {
+                                     boolean operationCheck,
+                                     Integer coupon1000Count,
+                                     Integer coupon3000Count,
+                                     Integer coupon5000Count) throws BaseException {
 
 
         User user = userRepository.findByIdAndStatus(userId,1)
@@ -48,16 +51,41 @@ public class CouponService {
         Coupon coupon = couponRepository.findByUser(user)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_COUPON));
 
-        if(coupon1000Count){
-            coupon.setCoupon1000(coupon.getCoupon1000()+1);
+
+        if(coupon1000Count > 0){
+            if(operationCheck) { //0은 플러스, 1은 마이너스
+                coupon.setCoupon1000(coupon.getCoupon1000() + coupon1000Count);
+            }else{
+                if(coupon.getCoupon1000() - coupon1000Count > 0){
+                    coupon.setCoupon1000(coupon.getCoupon1000() - coupon1000Count);
+                }else{
+                    coupon.setCoupon1000(0);
+                }
+            }
         }
 
-        if(coupon3000Count){
-            coupon.setCoupon3000(coupon.getCoupon3000()+1);
+        if(coupon3000Count > 0){
+            if(operationCheck) { //0은 플러스, 1은 마이너스
+                coupon.setCoupon3000(coupon.getCoupon3000() + coupon3000Count);
+            }else{
+                if(coupon.getCoupon3000() - coupon3000Count > 0){
+                    coupon.setCoupon3000(coupon.getCoupon3000() - coupon3000Count);
+                }else{
+                    coupon.setCoupon3000(0);
+                }
+            }
         }
 
-        if(coupon5000Count){
-            coupon.setCoupon5000(coupon.getCoupon5000()+1);
+        if(coupon5000Count > 0){
+            if(operationCheck) { //0은 플러스, 1은 마이너스
+                coupon.setCoupon5000(coupon.getCoupon5000() + coupon5000Count);
+            }else{
+                if(coupon.getCoupon5000() - coupon5000Count > 0){
+                    coupon.setCoupon5000(coupon.getCoupon5000() - coupon5000Count);
+                }else{
+                    coupon.setCoupon5000(0);
+                }
+            }
         }
 
         try{
@@ -73,5 +101,44 @@ public class CouponService {
                 .coupon5000Count(coupon.getCoupon5000())
                 .userId(coupon.getUser().getId())
                 .build();
+    }
+
+    public GetCouponRes deleteCoupon(Long userId,
+                                     boolean coupon1000Count,
+                                     boolean coupon3000Count,
+                                     boolean coupon5000Count) throws BaseException {
+
+        User user = userRepository.findByIdAndStatus(userId,1)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        Coupon coupon = couponRepository.findByUser(user)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_COUPON));
+
+        if(coupon1000Count){
+            coupon.setCoupon1000(0);
+        }
+
+        if(coupon3000Count){
+            coupon.setCoupon3000(0);
+        }
+
+        if(coupon5000Count){
+            coupon.setCoupon5000(0);
+        }
+
+        try{
+            couponRepository.save(coupon);
+        }catch (Exception exception){
+            throw new BaseException(FAILED_TO_DELETE_COUPON);
+        }
+
+        return GetCouponRes.builder()
+                .id(coupon.getId())
+                .coupon1000Count(coupon.getCoupon1000())
+                .coupon3000Count(coupon.getCoupon3000())
+                .coupon5000Count(coupon.getCoupon5000())
+                .userId(coupon.getUser().getId())
+                .build();
+
     }
 }

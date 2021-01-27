@@ -83,17 +83,44 @@ public class CouponController {
     @ApiOperation(value = " 쿠폰 수정하기 ", notes = " 쿠폰 수정하기")
     public BaseResponse<GetCouponRes> updateCoupon(
             @PathVariable Long userId,
-            @RequestParam(value = "coupon1000Count",required = false,defaultValue = "false") boolean coupon1000Count,
-            @RequestParam(value = "coupon3000Count",required = false,defaultValue = "false") boolean coupon3000Count,
-            @RequestParam(value = "coupon5000Count",required = false,defaultValue = "false") boolean coupon5000Count) throws BaseException{
+            //0은 plus,1 은 minus
+            @RequestParam(value = "plusOrMinus",defaultValue = "true") boolean operationCheck,
+            @RequestParam(value = "coupon1000Count",required = false,defaultValue = "0") Integer coupon1000Count,
+            @RequestParam(value = "coupon3000Count",required = false,defaultValue = "0") Integer coupon3000Count,
+            @RequestParam(value = "coupon5000Count",required = false,defaultValue = "0") Integer coupon5000Count) throws BaseException{
 
         GetCouponRes getCouponRes;
 
         try{
             getCouponRes = couponService.updateCoupon(
-                    userId, coupon1000Count, coupon3000Count,coupon5000Count
+                    userId,operationCheck, coupon1000Count, coupon3000Count,coupon5000Count
             );
             return new BaseResponse<>(SUCCESS_PATCH_COUPON, getCouponRes);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 쿠폰 삭제하기 (초기화)
+     */
+    @ResponseBody
+    @RequestMapping(value = "/coupons/{userId}",method = RequestMethod.DELETE)
+    @ApiOperation(value = " 쿠폰 초기화 하기 ", notes = " 쿠폰 초기화")
+    public BaseResponse<GetCouponRes> deleteCoupon(
+            @PathVariable Long userId,
+            //0은 plus,1 은 minus
+            @RequestParam(value = "coupon1000Count",required = false,defaultValue = "true") boolean coupon1000Count,
+            @RequestParam(value = "coupon3000Count",required = false,defaultValue = "true") boolean coupon3000Count,
+            @RequestParam(value = "coupon5000Count",required = false,defaultValue = "true") boolean coupon5000Count) throws BaseException{
+
+        GetCouponRes getCouponRes;
+
+        try{
+            getCouponRes = couponService.deleteCoupon(
+                    userId, coupon1000Count, coupon3000Count,coupon5000Count
+            );
+            return new BaseResponse<>(SUCCESS_DELETE_COUPON, getCouponRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }

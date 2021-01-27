@@ -36,6 +36,7 @@ public enum BaseResponseStatus {
     SUCCESS_READ_ORDERLIST_BY_USER(true, 1024, "회원 주문 내역조회에 성공했습니다."),
     SUCCESS_READ_ORDERLIST(true, 1025, "전체 주문 내역조회에 성공했습니다."),
     SUCCESS_READ_ORDER_DETAIL(true, 1026, "주문 내역 상세 조회에 성공했습니다."),
+    SUCCESS_DELETE_COUPON(true, 1027, "쿠폰 삭제에 성공했습니다."),
 
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
@@ -82,6 +83,8 @@ public enum BaseResponseStatus {
     FAILED_TO_GET_COUPON(false, 3037, " 쿠폰 조회에 실패했습니다."),
     FAILED_TO_UPDATE_COUPON(false, 3038, " 쿠폰 갱신에 실패했습니다."),
     FAILED_TO_GET_ORDERS(false, 3039, " 주문 내역 전체 조회에 실패했습니다."),
+    FAILED_TO_DELETE_COUPON(false, 3040, "쿠폰 삭제에 실패 했습니다."),
+
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),
     DATABASE_ERROR(false, 4001, "데이터베이스 연결에 실패하였습니다.");

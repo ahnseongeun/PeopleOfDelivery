@@ -90,6 +90,7 @@ public class StoreProvider {
                         .storeId(menu.getStore().getId())
                         .imageURL(menu.getImageURL())
                         .imageStatus(menu.getImageStatus())
+                        .popularStatus(menu.getPopularCheck())
                         .build()).collect(Collectors.toList()))
                 .build();
     }

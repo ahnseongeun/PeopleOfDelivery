@@ -101,7 +101,7 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.imageURL("default")
 				.status(1)
 				.name("test2")
-				.imageStatus(2)
+				.imageStatus(1)
 				.build());
 
 		menuRepository.save(Menu.builder()
@@ -112,7 +112,7 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.imageURL("default")
 				.status(1)
 				.name("test3")
-				.imageStatus(2)
+				.imageStatus(1)
 				.build());
 	}
 

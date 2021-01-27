@@ -16,5 +16,6 @@ public class PostMenuRes {
     private final String description;
     private final String imageURL;
     private final Long storeId;
+    private final Integer imageStatus;
 
 }

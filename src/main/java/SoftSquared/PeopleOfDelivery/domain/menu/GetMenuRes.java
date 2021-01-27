@@ -14,5 +14,6 @@ public class GetMenuRes {
     private final String description;
     private final String imageURL;
     private final Integer imageStatus;
+    private final Integer popularStatus;
     private final Long storeId;
 }

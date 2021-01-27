@@ -82,6 +82,8 @@ public class MenuProvider {
                 .name(menu.getName())
                 .price(menu.getPrice())
                 .description(menu.getDescription())
+                .popularStatus(menu.getPopularCheck())
+                .imageStatus(menu.getImageStatus())
                 .imageURL(imageURL)
                 .storeId(menu.getStore().getId())
                 .build();

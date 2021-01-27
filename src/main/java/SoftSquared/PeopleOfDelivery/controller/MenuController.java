@@ -2,6 +2,7 @@ package SoftSquared.PeopleOfDelivery.controller;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
+import SoftSquared.PeopleOfDelivery.domain.menu.DeleteMenuRes;
 import SoftSquared.PeopleOfDelivery.domain.menu.GetMenuRes;
 import SoftSquared.PeopleOfDelivery.domain.menu.GetMenusRes;
 import SoftSquared.PeopleOfDelivery.domain.menu.PostMenuRes;
@@ -92,4 +93,52 @@ public class MenuController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    /**
+     * 메뉴 수정
+     */
+    @ResponseBody
+    @RequestMapping(value = "/menus/{menuId}",method = RequestMethod.PATCH)
+    @ApiOperation(value = "메뉴 수정하기", notes = "메뉴 수정하기")
+    public BaseResponse<PostMenuRes> UpdateMenu(
+            @PathVariable Long menuId,
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "price") Integer price,
+            @RequestParam(value = "description") String description,
+            @RequestParam(value = "storeId") Long storeId,
+            @RequestParam(value = "popularCheck") Integer popularCheck,
+            @RequestParam(value = "imageFile",required = false) MultipartFile imageFile) throws IOException{
+
+        try{
+            PostMenuRes postMenuRes = menuService.updateMenu(
+                    menuId,name,price,popularCheck,description,storeId,imageFile
+            );
+            return new BaseResponse<>(SUCCESS_UPDATE_MENU, postMenuRes);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 메뉴 삭제
+     */
+    @ResponseBody
+    @RequestMapping(value = "/menus/{menuId}",method = RequestMethod.DELETE)
+    @ApiOperation(value = "메뉴 삭제하기", notes = "메뉴 삭제하기")
+    public BaseResponse<DeleteMenuRes> DeleteMenu(
+            @PathVariable Long menuId,
+            @RequestParam(name = "imageStatus",required = false,defaultValue = "false") boolean imageStatus
+            ) throws BaseException {
+
+        DeleteMenuRes deleteMenuRes;
+        try{
+            deleteMenuRes = menuService.deleteMenu(
+                    menuId , imageStatus
+            );
+            return new BaseResponse<>(SUCCESS_DELETE_MENU, deleteMenuRes);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package SoftSquared.PeopleOfDelivery.service;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
+import SoftSquared.PeopleOfDelivery.domain.menu.DeleteMenuRes;
 import SoftSquared.PeopleOfDelivery.domain.menu.Menu;
 import SoftSquared.PeopleOfDelivery.domain.menu.MenuRepository;
 import SoftSquared.PeopleOfDelivery.domain.menu.PostMenuRes;
@@ -12,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.FAILED_TO_POST_STORE;
-import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.NOT_FOUND_STORE;
+import java.util.Optional;
+
+import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
 import static SoftSquared.PeopleOfDelivery.config.secret.Secret.FILE_UPLOAD_DIRECTORY;
 
 @Service
@@ -38,7 +40,7 @@ public class MenuService {
 
         //이미지가 없을 경우 default 경로
         String imageURL;
-        Integer imageStatus;
+        int imageStatus;
         log.info("이미지 파일: " + String.valueOf(imageFile));
         if(imageFile == null){
             imageStatus = 2; //사용안함
@@ -46,7 +48,7 @@ public class MenuService {
         }else{
             imageStatus = 1; //사용함
             String filename = imageFile.getOriginalFilename();
-            imageURL = FILE_UPLOAD_DIRECTORY + "/stores/" + name+price+filename;
+            imageURL = FILE_UPLOAD_DIRECTORY + "/menus/" + name+price+filename;
             //TODO
             //imageFile.transferTo(new File(imageURI));
         }
@@ -67,7 +69,7 @@ public class MenuService {
         try{
             newMenu = menuRepository.save(menu);
         }catch (Exception exception){
-            throw new BaseException(FAILED_TO_POST_STORE);
+            throw new BaseException(FAILED_TO_POST_MENU);
         }
 
         //PostMenuRes 반환
@@ -78,7 +80,101 @@ public class MenuService {
                 .description(newMenu.getDescription())
                 .imageURL(newMenu.getImageURL())
                 .storeId(store.getId())
+                .imageStatus(newMenu.getImageStatus())
                 .build();
     }
 
+    public PostMenuRes updateMenu(Long menuId,
+                                  String name,
+                                  Integer price,
+                                  Integer popularCheck,
+                                  String description,
+                                  Long storeId,
+                                  MultipartFile imageFile) throws BaseException  {
+
+        Menu menu = menuRepository.findByIdAndStatus(menuId,1)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_MENU));
+
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_STORE));
+
+        //이미지가 없을 경우 default 경로
+        String imageURL;
+        int imageStatus;
+
+        log.info("이미지 파일: " + String.valueOf(imageFile));
+
+        if(imageFile == null){
+            imageStatus = 2; //사용안함
+            imageURL = FILE_UPLOAD_DIRECTORY +"/menu/default";
+            menu.setImageURL(imageURL);
+            menu.setImageStatus(2) ; //사용안함
+            
+        }else{
+            imageStatus = 1; //사용함
+            String filename = imageFile.getOriginalFilename();
+            imageURL = FILE_UPLOAD_DIRECTORY + "/menus/" + name+price+filename;
+            //TODO
+            //imageFile.transferTo(new File(imageURI));
+            menu.setImageURL(imageURL);
+            menu.setImageStatus(1) ; //사용함
+        }
+
+        menu.setName(name)
+                .setPrice(price)
+                .setPopularCheck(popularCheck)
+                .setDescription(description)
+                .setStore(store);
+
+        Menu newMenu;
+        try{
+            newMenu = menuRepository.save(menu);
+        }catch (Exception exception){
+            throw new BaseException(FAILED_TO_UPDATE_MENU);
+        }
+
+        //MenuRes 반환
+        return PostMenuRes.builder()
+                .id(newMenu.getId())
+                .name(newMenu.getName())
+                .price(newMenu.getPrice())
+                .description(newMenu.getDescription())
+                .imageURL(newMenu.getImageURL())
+                .storeId(newMenu.getStore().getId())
+                .imageStatus(newMenu.getImageStatus())
+                .build();
+
+    }
+
+    public DeleteMenuRes deleteMenu(Long menuId, boolean imageStatus) throws BaseException {
+
+        Menu menu = menuRepository.findByIdAndStatus(menuId,1)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_MENU));
+
+        if(imageStatus){
+            menu.setImageStatus(2);
+            return getDeleteMenuRes(menu);
+        }
+
+        menu.setStatus(2);
+
+        return getDeleteMenuRes(menu);
+
+    }
+
+    private DeleteMenuRes getDeleteMenuRes(Menu menu) throws BaseException {
+
+        Menu newMenu;
+        try {
+            newMenu = menuRepository.save(menu);
+        } catch (Exception exception) {
+            throw new BaseException(FAILED_TO_DELETE_MENU);
+        }
+
+        return DeleteMenuRes.builder()
+                .menuId(newMenu.getId())
+                .MenuStatus(newMenu.getStatus())
+                .MenuImageStatus(newMenu.getImageStatus())
+                .build();
+    }
 }

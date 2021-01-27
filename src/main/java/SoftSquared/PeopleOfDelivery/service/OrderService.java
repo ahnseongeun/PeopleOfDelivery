@@ -7,6 +7,7 @@ import SoftSquared.PeopleOfDelivery.domain.order.DeleteOrderRes;
 import SoftSquared.PeopleOfDelivery.domain.order.Orders;
 import SoftSquared.PeopleOfDelivery.domain.order.OrdersRepository;
 import SoftSquared.PeopleOfDelivery.domain.order.PostOrderRes;
+import SoftSquared.PeopleOfDelivery.domain.orderDetail.DeleteOrderDetail;
 import SoftSquared.PeopleOfDelivery.domain.orderDetail.OrderDetail;
 import SoftSquared.PeopleOfDelivery.domain.orderDetail.OrderDetailRepository;
 import SoftSquared.PeopleOfDelivery.domain.payment.Payment;
@@ -212,6 +213,13 @@ public class OrderService {
                 .build();
     }
 
+
+    /**
+     * 주문 삭제
+     * @param orderId
+     * @return
+     * @throws BaseException
+     */
     public DeleteOrderRes DeleteOrder(Long orderId) throws BaseException {
 
         Orders orders = ordersRepository.findByIdAndStatus(orderId,2)
@@ -224,9 +232,29 @@ public class OrderService {
         }catch (Exception exception){
             throw new BaseException(FAILED_TO_DELETE_ORDER);
         }
+
+        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrdersAndStatus(orders,2);
+
+        orderDetailList = orderDetailList.stream()
+                .map(orderDetail -> orderDetail.setStatus(3))
+                .collect(Collectors.toList());
+
+        try{
+            orderDetailList = orderDetailList.stream()
+                    .map(orderDetailRepository::save)
+                    .collect(Collectors.toList());
+        }catch (Exception exception){
+            throw new BaseException(FAILED_TO_DELETE_ORDER);
+        }
+
         return DeleteOrderRes.builder()
                 .orderId(orders.getId())
                 .status(orders.getStatus())
+                .orderDetailList(orderDetailList.stream()
+                        .map(orderDetail -> DeleteOrderDetail.builder()
+                                .orderDetailId(orderDetail.getId())
+                                .orderDetailStatus(orderDetail.getStatus())
+                                .build()).collect(Collectors.toList()))
                 .build();
     }
 }

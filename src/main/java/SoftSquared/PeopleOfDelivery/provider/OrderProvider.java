@@ -36,6 +36,24 @@ public class OrderProvider {
     }
 
     /**
+     * 전체 주문 조회
+     * @return
+     */
+    public List<GetOrderRes> retrieveOrders() throws BaseException {
+
+        List<Orders> orderList;
+
+        try{
+            //삭제를 제외 하고 조회
+            orderList = ordersRepository.findByStatus(2);
+        }catch (Exception exception){
+            throw new BaseException(FAILED_TO_GET_ORDERS);
+        }
+        return getGetOrderRes(orderList);
+
+    }
+
+    /**
      * 내 주문 내역 조회
      * @param userId
      * @return
@@ -55,30 +73,18 @@ public class OrderProvider {
         return getGetOrderRes(orderList);
     }
 
-    public List<GetOrderRes> retrieveOrders() throws BaseException {
-
-        List<Orders> orderList;
-
-        try{
-            //삭제를 제외 하고 조회
-            orderList = ordersRepository.findByStatus(1);
-        }catch (Exception exception){
-            throw new BaseException(FAILED_TO_GET_ORDERS);
-        }
-        return getGetOrderRes(orderList);
-
-    }
-
     /**
      * 주문 상세 조회
      * @return
      */
     public GetOrderDetailRes retrieveOrderDetail(Long orderId) throws BaseException {
 
-        Orders orders = ordersRepository.findByIdAndStatus(orderId,1)
+        Orders orders = ordersRepository.findByIdAndStatus(orderId,2)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_ORDER));
 
         return GetOrderDetailRes.builder()
+                .orderId(orders.getId())
+                .address(orders.getAddress())
                 .storeId(orders.getStore().getId())
                 .userId(orders.getUser().getId())
                 .orderDetailMenuList(orders.getOrderDetails().stream().map(orderDetail ->

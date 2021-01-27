@@ -53,7 +53,7 @@ public class OrderController {
      * 회원 주문 상세 조회
      */
     @ResponseBody
-    @RequestMapping(value = "/orders/{orderId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/order-detail/{orderId}",method = RequestMethod.GET)
     @ApiOperation(value = "주문 내역 상세조회", notes = "주문 내역 상세 조회")
     public BaseResponse<GetOrderDetailRes> getOrderDetail(
             @PathVariable Long orderId){
@@ -112,7 +112,7 @@ public class OrderController {
 
         try{
             postOrderRes = orderService.createOrder(
-                    requestContent,userId,address,storeId,orderPrice,deliveryFee,BasketId,pgName,pgType,pgData);
+                    requestContent,userId,address,storeId,orderPrice,deliveryFee,BasketId,pgName,pgType,pgData,couponType);
             return new BaseResponse<>(SUCCESS_READ_ORDER, postOrderRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());

@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class GetOrderDetailRes {
 
+    private final Long orderId;
+    private final String address;
     private final Long storeId; // store id, name , phone_number 조회가능
     private final Long userId; // user_address, user_phone_number 조회가능
     private final List<OrderDetailMenu> orderDetailMenuList;

@@ -1,6 +1,8 @@
 package SoftSquared.PeopleOfDelivery.service;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
+import SoftSquared.PeopleOfDelivery.domain.coupon.Coupon;
+import SoftSquared.PeopleOfDelivery.domain.coupon.CouponRepository;
 import SoftSquared.PeopleOfDelivery.domain.order.Orders;
 import SoftSquared.PeopleOfDelivery.domain.order.OrdersRepository;
 import SoftSquared.PeopleOfDelivery.domain.order.PostOrderRes;
@@ -35,6 +37,7 @@ public class OrderService {
     private final StoreRepository storeRepository;
     private final ShoppingBasketRepository shoppingBasketRepository;
     private final PaymentRepository paymentRepository;
+    private final CouponRepository couponRepository;
 
     @Autowired
     public OrderService(OrdersRepository ordersRepository,
@@ -42,13 +45,15 @@ public class OrderService {
                         UserRepository userRepository,
                         StoreRepository storeRepository,
                         ShoppingBasketRepository shoppingBasketRepository,
-                        PaymentRepository paymentRepository){
+                        PaymentRepository paymentRepository,
+                        CouponRepository couponRepository){
         this.ordersRepository = ordersRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.userRepository = userRepository;
         this.storeRepository = storeRepository;
         this.shoppingBasketRepository = shoppingBasketRepository;
         this.paymentRepository = paymentRepository;
+        this.couponRepository = couponRepository;
     }
 
 
@@ -57,13 +62,16 @@ public class OrderService {
                                     Integer orderPrice,Integer deliveryFee,
                                     List<Long> basketId,
                                     String pgName , String pgType ,
-                                    String pgData) throws BaseException {
+                                    String pgData,Integer couponType) throws BaseException {
 
         User user = userRepository.findByIdAndStatus(userId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
 
         Store store = storeRepository.findByIdAndStatus(storeId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_STORES));
+
+        Coupon coupon = couponRepository.findByUser(user)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_COUPON));
 
         //사용자가 주소를 지정하지 않으면 기존 주소로 대체
         address = Optional.ofNullable(address).orElse(user.getLocation());
@@ -128,6 +136,26 @@ public class OrderService {
         /*
         결제가 완료되면 주문 테이블과 주문 상세 테이블 처리완료로 상태 업데이트 및 장바구니 삭제 처리
          */
+
+        //쿠폰 업데이트
+
+        if(couponType == 1){
+            coupon.setCoupon1000(coupon.getCoupon1000() - 1);
+        }
+
+        if(couponType == 2){
+            coupon.setCoupon3000(coupon.getCoupon3000() - 1);
+        }
+
+        if(couponType == 3){
+            coupon.setCoupon5000(coupon.getCoupon5000() - 1);
+        }
+
+        try{
+            couponRepository.save(coupon);
+        }catch (Exception exception){
+            throw new BaseException(FAILED_TO_UPDATE_COUPON);
+        }
 
         //주문 테이블 업데이트
         Orders updateOrder = ordersRepository.findByIdAndStatus(newOrder.getId(),1)

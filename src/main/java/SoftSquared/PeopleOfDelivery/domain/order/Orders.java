@@ -38,6 +38,12 @@ public class Orders extends BaseEntity {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "orderPrice", nullable = false)
+    private Integer orderPrice;
+
+    @Column(name = "deliveryFee", nullable = false)
+    private Integer deliveryFee;
+
     /**
      * 1. 처리완료
      * 2. 처리중

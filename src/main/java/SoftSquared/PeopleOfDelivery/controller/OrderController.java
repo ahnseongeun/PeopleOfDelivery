@@ -2,6 +2,7 @@ package SoftSquared.PeopleOfDelivery.controller;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
+import SoftSquared.PeopleOfDelivery.domain.order.GetOrderDetailRes;
 import SoftSquared.PeopleOfDelivery.domain.order.GetOrderRes;
 import SoftSquared.PeopleOfDelivery.domain.order.PostOrderRes;
 import SoftSquared.PeopleOfDelivery.provider.OrderProvider;
@@ -13,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.SUCCESS_READ_ORDER;
-import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.SUCCESS_READ_ORDERLIST_BY_USER;
+import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
 
 @Controller
 @RequestMapping(value = "/api")
@@ -33,14 +33,48 @@ public class OrderController {
     /**
      * 전체 주문 조회
      */
+    @ResponseBody
+    @RequestMapping(value = "/orders",method = RequestMethod.GET)
+    @ApiOperation(value = "전체 주문내역 조회", notes = "전체 주문내역 조회")
+    public BaseResponse<List<GetOrderRes>> getOrders(){
+
+        List<GetOrderRes> getOrderResList;
+
+        try{
+            getOrderResList = orderProvider.retrieveOrders();
+            return new BaseResponse<>(SUCCESS_READ_ORDERLIST, getOrderResList);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 
     /**
-     * 회원 주문내역 조회
+     * 회원 주문 상세 조회
+     */
+    @ResponseBody
+    @RequestMapping(value = "/orders/{orderId}",method = RequestMethod.GET)
+    @ApiOperation(value = "주문 내역 상세조회", notes = "주문 내역 상세 조회")
+    public BaseResponse<GetOrderDetailRes> getOrderDetail(
+            @PathVariable Long orderId){
+
+        GetOrderDetailRes getOrderDetailResList;
+
+        try{
+            getOrderDetailResList = orderProvider.retrieveOrderDetail(orderId);
+            return new BaseResponse<>(SUCCESS_READ_ORDER_DETAIL, getOrderDetailResList);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 회원 주문 내역 조회
      */
     @ResponseBody
     @RequestMapping(value = "/orders/{userId}",method = RequestMethod.GET)
     @ApiOperation(value = "회원 주문내역 조회", notes = "회원 주문내역 조회")
-    public BaseResponse<List<GetOrderRes>> getOrders(
+    public BaseResponse<List<GetOrderRes>> getUserOrders(
             @PathVariable Long userId){
 
         List<GetOrderRes> getOrderResList;
@@ -64,7 +98,8 @@ public class OrderController {
             @RequestParam(name = "userId") Long userId,
             @RequestParam(name = "storeId") Long storeId,
             @RequestParam(name = "address",required = false) String address,
-            @RequestParam(name = "totalPrice") Integer totalPrice,
+            @RequestParam(name = "orderPrice") Integer orderPrice,
+            @RequestParam(name = "DeliveryFee") Integer deliveryFee,
             @RequestParam(name = "couponType") Integer couponType,
             @RequestParam(name = "BasketId") List<Long> BasketId,
             @RequestParam(name = "pgName") String pgName,
@@ -77,7 +112,7 @@ public class OrderController {
 
         try{
             postOrderRes = orderService.createOrder(
-                    requestContent,userId,address,storeId,totalPrice,BasketId,pgName,pgType,pgData);
+                    requestContent,userId,address,storeId,orderPrice,deliveryFee,BasketId,pgName,pgType,pgData);
             return new BaseResponse<>(SUCCESS_READ_ORDER, postOrderRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());

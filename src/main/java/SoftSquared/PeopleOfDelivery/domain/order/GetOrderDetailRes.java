@@ -1,6 +1,5 @@
 package SoftSquared.PeopleOfDelivery.domain.order;
 
-
 import SoftSquared.PeopleOfDelivery.domain.orderDetail.OrderDetailMenu;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,12 +11,15 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-public class GetOrderRes {
+public class GetOrderDetailRes {
 
-    private final Long orderId;
-    private final String storeName;
+    private final Long storeId; // store id, name , phone_number 조회가능
+    private final Long userId; // user_address, user_phone_number 조회가능
     private final List<OrderDetailMenu> orderDetailMenuList;
-    private final Integer totalPrice;
+    private final String requestContent;
+    private final Integer orderPrice;
+    private final String payType;
+    private final Integer deliveryFee;
     private final Date orderDate;
-
+    private final Integer deliveryStatus;
 }

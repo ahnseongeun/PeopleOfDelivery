@@ -14,5 +14,7 @@ public interface OrdersRepository extends CrudRepository<Orders,Long> {
 
     List<Orders> findByUserAndStatus(User user, Integer status);
 
+    List<Orders>findByStatus(Integer status);
+
     //List<OrderS> findUserAndStatus(User user,Integer status);
 }

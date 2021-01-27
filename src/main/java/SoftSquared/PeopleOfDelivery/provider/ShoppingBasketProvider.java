@@ -127,8 +127,9 @@ public class ShoppingBasketProvider {
         }
 
         return GetTotalPriceRes.builder()
-                .totalPrice(price)
                 .usedCoupon(usedCoupon)
+                .orderPrice(price)
+                .deliveryFee(basket.getMenu().getStore().getDeliveryFee())
                 .storeId(basket.getMenu().getStore().getId())
                 .build();
     }

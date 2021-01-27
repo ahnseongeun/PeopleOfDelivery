@@ -10,6 +10,7 @@ import lombok.Getter;
 public class GetTotalPriceRes {
 
     private Integer usedCoupon;
-    private Integer totalPrice;
+    private Integer orderPrice;
+    private Integer deliveryFee;
     private Long storeId;
 }

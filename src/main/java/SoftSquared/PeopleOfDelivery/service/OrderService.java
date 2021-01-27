@@ -54,7 +54,8 @@ public class OrderService {
 
     public PostOrderRes createOrder(String requestContent, Long userId,
                                     String address, Long storeId,
-                                    Integer totalPrice,List<Long> basketId,
+                                    Integer orderPrice,Integer deliveryFee,
+                                    List<Long> basketId,
                                     String pgName , String pgType ,
                                     String pgData) throws BaseException {
 
@@ -71,6 +72,8 @@ public class OrderService {
                 .requestContent(requestContent)
                 .user(user)
                 .address(address)
+                .orderPrice(orderPrice)
+                .deliveryFee(deliveryFee)
                 .store(store)
                 .status(1) //1 처리중 2 주문처리완료
                 .build();
@@ -109,7 +112,7 @@ public class OrderService {
         Payment payment = Payment.builder()
                 .pgName(pgName)
                 .pgType(pgType)
-                .pgPrice(totalPrice)
+                .pgPrice(orderPrice+deliveryFee)
                 .pgData(pgData)
                 .status(1) //1은 결재완료 //2가 삭제
                 .orders(newOrder)

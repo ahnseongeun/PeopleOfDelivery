@@ -3,6 +3,7 @@ package SoftSquared.PeopleOfDelivery.service;
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.domain.coupon.Coupon;
 import SoftSquared.PeopleOfDelivery.domain.coupon.CouponRepository;
+import SoftSquared.PeopleOfDelivery.domain.order.DeleteOrderRes;
 import SoftSquared.PeopleOfDelivery.domain.order.Orders;
 import SoftSquared.PeopleOfDelivery.domain.order.OrdersRepository;
 import SoftSquared.PeopleOfDelivery.domain.order.PostOrderRes;
@@ -208,6 +209,24 @@ public class OrderService {
                 .orderId(updateOrder.getId())
                 .orderDetailIdList(updateOrderDetailList)
                 .paymentId(postPayment.getId())
+                .build();
+    }
+
+    public DeleteOrderRes DeleteOrder(Long orderId) throws BaseException {
+
+        Orders orders = ordersRepository.findByIdAndStatus(orderId,2)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_ORDER));
+
+        orders.setStatus(3);
+
+        try{
+            ordersRepository.save(orders);
+        }catch (Exception exception){
+            throw new BaseException(FAILED_TO_DELETE_ORDER);
+        }
+        return DeleteOrderRes.builder()
+                .orderId(orders.getId())
+                .status(orders.getStatus())
                 .build();
     }
 }

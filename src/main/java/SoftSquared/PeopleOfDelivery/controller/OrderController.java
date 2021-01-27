@@ -2,6 +2,7 @@ package SoftSquared.PeopleOfDelivery.controller;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
+import SoftSquared.PeopleOfDelivery.domain.order.DeleteOrderRes;
 import SoftSquared.PeopleOfDelivery.domain.order.GetOrderDetailRes;
 import SoftSquared.PeopleOfDelivery.domain.order.GetOrderRes;
 import SoftSquared.PeopleOfDelivery.domain.order.PostOrderRes;
@@ -114,6 +115,25 @@ public class OrderController {
             postOrderRes = orderService.createOrder(
                     requestContent,userId,address,storeId,orderPrice,deliveryFee,BasketId,pgName,pgType,pgData,couponType);
             return new BaseResponse<>(SUCCESS_READ_ORDER, postOrderRes);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 주문 삭제
+     */
+    @ResponseBody
+    @RequestMapping(value = "/orders/{orderId}",method = RequestMethod.DELETE)
+    @ApiOperation(value = "회원 주문 삭제하기", notes = "회원 주문 삭제하기")
+    public BaseResponse<DeleteOrderRes> DeleteOrder(
+            @PathVariable Long orderId){
+
+        DeleteOrderRes deleteOrderRes;
+
+        try{
+            deleteOrderRes = orderService.DeleteOrder(orderId);
+            return new BaseResponse<>(SUCCESS_DELETE_ORDER, deleteOrderRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }

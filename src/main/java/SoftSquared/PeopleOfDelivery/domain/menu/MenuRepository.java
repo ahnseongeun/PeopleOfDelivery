@@ -11,4 +11,6 @@ public interface MenuRepository extends CrudRepository<Menu,Long> {
     Optional<Menu> findByIdAndStatusNot(Long id, Integer status);
 
     Optional<Menu> findByIdAndStatus(Long id, Integer status);
+
+    List<Menu> findByStatus(Integer status);
 }

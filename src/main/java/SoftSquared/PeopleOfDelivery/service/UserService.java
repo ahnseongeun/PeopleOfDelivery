@@ -4,16 +4,16 @@ import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.secret.Secret;
 import SoftSquared.PeopleOfDelivery.domain.coupon.Coupon;
 import SoftSquared.PeopleOfDelivery.domain.coupon.CouponRepository;
-import SoftSquared.PeopleOfDelivery.domain.user.PostUserRes;
-import SoftSquared.PeopleOfDelivery.domain.user.User;
-import SoftSquared.PeopleOfDelivery.domain.user.UserRepository;
+import SoftSquared.PeopleOfDelivery.domain.user.*;
 import SoftSquared.PeopleOfDelivery.provider.UserProvider;
 import SoftSquared.PeopleOfDelivery.utils.AES128;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
+import static SoftSquared.PeopleOfDelivery.config.secret.Secret.FILE_UPLOAD_DIRECTORY;
 
 @Service
 public class UserService {
@@ -79,8 +79,9 @@ public class UserService {
                 .role(role)
                 .birthdate(birthdate)
                 .gender(gender)
+                .location("default")
                 .status(1)
-                .imageURL("/img/users/default")
+                .imageURL("img/users/default")
                 .build();
 
         // 3. 유저 정보 저장
@@ -116,4 +117,60 @@ public class UserService {
     }
 
 
+
+    /**
+     * 내 프로필 수정
+     * @param userId
+     * @param location
+     * @param imageFile
+     * @return
+     */
+    public UpdateUserRes updateUser(Long userId,
+                                    String updatePassword,
+                                    String location,
+                                    MultipartFile imageFile) throws BaseException {
+
+        User user = userRepository.findByIdAndStatus(userId,1).orElseThrow(()
+                -> new BaseException(FAILED_TO_GET_USER));
+
+        String imageURL;
+
+        if(imageFile != null){
+            String filename = imageFile.getOriginalFilename();
+            imageURL = FILE_UPLOAD_DIRECTORY + "/users/" + user.getName()+user.getPhoneNumber()+filename;
+            //TODO
+            //imageFile.transferTo(new File(imageURI));
+            user.setImageURL(imageURL);
+        }
+        if(!updatePassword.equals("empty")){
+            user.setPassword(updatePassword);
+        }
+
+        if(!location.equals(user.getLocation()) || location.equals("default")) {
+            user.setLocation(location);
+        }
+
+        userRepository.save(user);
+
+        return UpdateUserRes.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .location(user.getLocation())
+                .imageURL(user.getImageURL())
+                .build();
+
+    }
+
+    public DeleteUserRes deleteUser(Long userId) throws BaseException {
+
+        User user = userRepository.findByIdAndStatus(userId,1).
+                orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+        user.setStatus(2);
+        userRepository.save(user);
+        return DeleteUserRes.builder()
+                .userId(user.getId())
+                .status(user.getStatus())
+                .build();
+    }
 }

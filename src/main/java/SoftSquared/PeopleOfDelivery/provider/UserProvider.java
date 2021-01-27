@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.FAILED_TO_GET_USER;
-import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.NOT_FOUND_USER;
+import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
 
 @Service
 @Slf4j
@@ -50,12 +49,14 @@ public class UserProvider {
             String email = user.getEmail();
             String phoneNumber = user.getPhoneNumber();
             String imageURL = user.getImageURL();
+            Integer status = user.getStatus();
             return GetUserRes.builder()
                     .id(id)
                     .name(userName)
                     .email(email)
                     .phoneNumber(phoneNumber)
                     .imageURL(imageURL)
+                    .status(status)
                     .build();
         }).collect(Collectors.toList());
     }
@@ -69,8 +70,12 @@ public class UserProvider {
     public GetUserRes retrieveUser(Long userId) throws BaseException{
         User user;
         log.info("회원 조회");
-        user = userRepository.findById(userId).orElseThrow(()
+        user = userRepository.findByIdAndStatus(userId,1).orElseThrow(()
                 -> new BaseException(FAILED_TO_GET_USER));
+
+        if(user.getStatus() == 2){
+            throw new BaseException(STOPED_USER);
+        }
 
         if(user == null || user.getStatus() == 3){
             throw new BaseException(NOT_FOUND_USER);
@@ -82,6 +87,7 @@ public class UserProvider {
                 .name(user.getName())
                 .phoneNumber(user.getPhoneNumber())
                 .imageURL(user.getImageURL())
+                .status(user.getStatus())
                 .build();
     }
 

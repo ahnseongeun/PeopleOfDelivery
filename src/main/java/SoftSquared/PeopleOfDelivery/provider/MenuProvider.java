@@ -43,7 +43,7 @@ public class MenuProvider {
         List<Menu> menuList;
         try{
             //삭제를 제외 하고 조회
-            menuList = menuRepository.findByStatusNot(10);
+            menuList = menuRepository.findByStatus(1);
         }catch (Exception exception){
             throw new BaseException(FAILED_TO_GET_MENUS);
         }
@@ -67,7 +67,7 @@ public class MenuProvider {
      */
     public GetMenuRes retrieveMenu(Long menuId) throws BaseException{
 
-        Menu menu = menuRepository.findByIdAndStatusNot(menuId,2)
+        Menu menu = menuRepository.findByIdAndStatus(menuId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_MENU));
 
         String imageURL;

@@ -39,6 +39,8 @@ public enum BaseResponseStatus {
     SUCCESS_DELETE_COUPON(true, 1027, "쿠폰 삭제에 성공했습니다."),
     SUCCESS_UPDATE_MENU(true, 1028, "메뉴 수정에 성공했습니다."),
     SUCCESS_DELETE_MENU(true, 1029, "메뉴 삭제에 성공했습니다."),
+    SUCCESS_UPDATE_USER(true, 1030, "회원 프로필 수정에 성공했습니다."),
+    SUCCESS_DELETE_ORDER(true, 1031, "주문 삭제에 성공했습니다."),
 
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
@@ -89,7 +91,8 @@ public enum BaseResponseStatus {
     FAILED_TO_POST_MENU(false, 3041, "메뉴 추가에 실패 했습니다."),
     FAILED_TO_UPDATE_MENU(false, 3042, "메뉴 수정에 실패 했습니다."),
     FAILED_TO_DELETE_MENU(false, 3043, "메뉴 삭제에 실패 했습니다."),
-    
+    STOPED_USER(false, 3044, "정지된 회원입니다."),
+    FAILED_TO_DELETE_ORDER(false, 3045, "주문 삭제에 실패 했습니다."),
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),
     DATABASE_ERROR(false, 4001, "데이터베이스 연결에 실패하였습니다.");

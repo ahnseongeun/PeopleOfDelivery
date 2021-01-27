@@ -2,14 +2,17 @@ package SoftSquared.PeopleOfDelivery.controller;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
+import SoftSquared.PeopleOfDelivery.domain.user.DeleteUserRes;
 import SoftSquared.PeopleOfDelivery.domain.user.GetUserRes;
 import SoftSquared.PeopleOfDelivery.domain.user.PostUserRes;
+import SoftSquared.PeopleOfDelivery.domain.user.UpdateUserRes;
 import SoftSquared.PeopleOfDelivery.provider.UserProvider;
 import SoftSquared.PeopleOfDelivery.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -134,14 +137,60 @@ public class UserController {
      */
 
     /**
-     * 업데이트
+     * 유저 프로필 수정
      * 사진, 위치
      */
+    @ResponseBody
+    @RequestMapping(value = "/users/{userId}", method = RequestMethod.PATCH)
+    @ApiOperation(value = "프로필 수정(회원 기능)", notes = "프로필 수정")
+    public BaseResponse<UpdateUserRes> UpdateUser(
+            @PathVariable Long userId,
+            @RequestParam(name = "password") String password,
+            @RequestParam(name = "confirmPassword") String confirmPassword,
+            @RequestParam(name = "updatePassword",required = false,defaultValue = "empty") String updatePassword,
+            @RequestParam(name = "location") String location,
+            @RequestParam(value = "imageFile",required = false) MultipartFile imageFile )
+            throws BaseException{
+
+        // 1. Body Parameter Validation
+        if (password == null || password.length() == 0) {
+            return new BaseResponse<>(EMPTY_PASSWORD);
+        }
+        if (confirmPassword == null || confirmPassword.length() == 0) {
+            return new BaseResponse<>(EMPTY_CONFIRM_PASSWORD);
+        }
+        if (!password.equals(confirmPassword)) {
+            return new BaseResponse<>(DO_NOT_MATCH_PASSWORD);
+        }
+
+        // 2. Post UserInfo
+        try {
+            UpdateUserRes updateUserRes = userService.updateUser(
+                    userId,updatePassword, location, imageFile
+            );
+            return new BaseResponse<>(SUCCESS_UPDATE_USER, updateUserRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
     /**
      * 삭제
      */
+    @ResponseBody
+    @RequestMapping(value = "/users/{userId}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "회원 삭제(회원 기능)", notes = "회원 삭제")
+    public BaseResponse<DeleteUserRes> DeleteUser(
+            @PathVariable Long userId) throws BaseException{
 
+        // 2. Post UserInfo
+        try {
+            DeleteUserRes deleteUserRes = userService.deleteUser(userId);
+            return new BaseResponse<>(SUCCESS_DELETE_USER, deleteUserRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 }
 
 

@@ -1,6 +1,7 @@
 package SoftSquared.PeopleOfDelivery.service;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
+import SoftSquared.PeopleOfDelivery.config.BaseResponse;
 import SoftSquared.PeopleOfDelivery.domain.order.Orders;
 import SoftSquared.PeopleOfDelivery.domain.order.OrdersRepository;
 import SoftSquared.PeopleOfDelivery.domain.review.PostReviewRes;
@@ -10,6 +11,7 @@ import SoftSquared.PeopleOfDelivery.domain.store.Store;
 import SoftSquared.PeopleOfDelivery.domain.store.StoreRepository;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
 import SoftSquared.PeopleOfDelivery.domain.user.UserRepository;
+import ch.qos.logback.classic.spi.IThrowableProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +52,14 @@ public class ReviewService {
         Orders orders = ordersRepository.findByIdAndStatus(orderId,2)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_ORDER));
 
-        Review review = Review.builder()
+        //TODO
+        Review review = reviewRepository.findByStoreAndOrdersAndUserAndStatus(store,orders,user,1)
+                .orElse(null);
+
+        if(review != null)
+            throw new BaseException(DUPLICATED_REVIEW);
+
+        review = Review.builder()
                 .content(content)
                 .starCount(startCount)
                 .orders(orders)

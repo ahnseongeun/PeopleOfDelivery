@@ -4,6 +4,7 @@ import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
 import SoftSquared.PeopleOfDelivery.domain.menu.PostMenuRes;
 import SoftSquared.PeopleOfDelivery.domain.payment.GetPaymentRes;
+import SoftSquared.PeopleOfDelivery.domain.review.GetOpponentReviewRes;
 import SoftSquared.PeopleOfDelivery.domain.review.GetReviewRes;
 import SoftSquared.PeopleOfDelivery.domain.review.PostReviewRes;
 import SoftSquared.PeopleOfDelivery.provider.ReviewProvider;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
 
@@ -52,6 +54,7 @@ public class ReviewController {
             @RequestParam(value = "userId") Long userId,
             @RequestParam(value = "storeId") Long storeId) throws IOException {
 
+
         try{
             PostReviewRes postReviewRes = reviewService.createReview(
                     content,startCount,orderId,userId,storeId
@@ -65,17 +68,50 @@ public class ReviewController {
     @ResponseBody
     @RequestMapping(value = "/reviews/{userId}",method = RequestMethod.GET)
     @ApiOperation(value = "내 리뷰 조회", notes = "내 리뷰 조회")
-    public BaseResponse<List<GetReviewRes>> getPayment(
+    public BaseResponse<GetReviewRes> getReview(
             @PathVariable("userId") Long userId) throws BaseException{
 
-        GetPaymentRes getPaymentRes;
+        GetReviewRes getReviewRes;
         try{
-            getPaymentRes = paymentProvider.retrievePayment(orderId);
-            return new BaseResponse<>(SUCCESS_READ_PAYMENT, getPaymentRes);
+            getReviewRes = reviewProvider.retrieveReview(userId);
+            return new BaseResponse<>(SUCCESS_READ_REVIEW, getReviewRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/opponent-reviews",method = RequestMethod.GET)
+    @ApiOperation(value = "상대방 리뷰 내용 조회", notes = "내 리뷰 조회")
+    public BaseResponse<GetOpponentReviewRes> getHostReview(
+            @RequestParam(value = "storeId") Long storeId,
+            @RequestParam(value = "orderId") Long orderId
+            ) throws BaseException{
+
+        GetOpponentReviewRes getOpponentReviewRes;
+        try{
+            getOpponentReviewRes = reviewProvider.retrieveHostReview(storeId,orderId);
+            return new BaseResponse<>(SUCCESS_READ_HOST_REVIEW, getOpponentReviewRes);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+//    @ResponseBody
+//    @RequestMapping(value = "/reviews/{storeId}",method = RequestMethod.GET)
+//    @ApiOperation(value = "가게 리뷰 평균 조회", notes = "가게 리뷰 평균 조회")
+//    public BaseResponse<List<GetReviewRes>> getPayment(
+//            @PathVariable("userId") Long userId) throws BaseException{
+//
+//        List<GetReviewRes>
+//        try{
+//            getPaymentRes = paymentProvider.retrievePayment(orderId);
+//            return new BaseResponse<>(SUCCESS_READ_PAYMENT, getPaymentRes);
+//        }catch(BaseException exception){
+//            return new BaseResponse<>(exception.getStatus());
+//        }
+//    }
+
 //    내 리뷰 조회
 //    전체 리뷰 조회
 //    가게 리뷰 조회

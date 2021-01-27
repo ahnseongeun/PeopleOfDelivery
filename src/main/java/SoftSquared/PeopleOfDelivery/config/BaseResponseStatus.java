@@ -50,6 +50,8 @@ public enum BaseResponseStatus {
     SUCCESS_UPDATE_PAYMENT(true, 1038, "결제 내역 수정에 성공했습니다."),
     SUCCESS_DELETE_PAYMENT(true, 1038, "결제 내역 삭제에 성공했습니다."),
     SUCCESS_POST_REVIEW(true, 1039, "리뷰 추가에 성공했습니다."),
+    SUCCESS_READ_REVIEW(true, 1040, "리뷰 조회에 성공했습니다."),
+    SUCCESS_READ_HOST_REVIEW(true, 1041, "가게 주인 리뷰 조회에 성공했습니다."),
 
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
@@ -66,6 +68,8 @@ public enum BaseResponseStatus {
     EMPTY_MENU(false, 2041, "최소 한가지 메뉴를 장바구니에 추가해주세요"),
     EMPTY_ORDERLIST(false, 2042, "주문 내역이 비었습니다."),
     EMPTY_PAYMENT(false, 2043, "결제 내역이 비었습니다."),
+    EMPTY_REVIEW(false, 2044, "리뷰 내역이 비었습니다."),
+    DUPLICATED_REVIEW(false, 2045, "리뷰가 이미 존재합니다."),
 
     // 3000 : Response 오류
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
@@ -109,6 +113,8 @@ public enum BaseResponseStatus {
     FAILED_TO_UPDATE_PAYMENT(false, 3049, "결제 내역 수정에 실패 했습니다."),
     FAILED_TO_DELETE_PAYMENT(false, 3050, "결제 내역 삭제에 실패 했습니다."),
     FAILED_TO_POST_REVIEW(false, 3051, "리뷰 추가에 실패 했습니다."),
+    FAILED_TO_GET_REVIEW(false, 3052, "리뷰 조회 실패 했습니다."),
+
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),
     DATABASE_ERROR(false, 4001, "데이터베이스 연결에 실패하였습니다.");

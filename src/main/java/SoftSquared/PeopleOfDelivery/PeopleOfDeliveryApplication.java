@@ -4,6 +4,7 @@ import SoftSquared.PeopleOfDelivery.domain.coupon.Coupon;
 import SoftSquared.PeopleOfDelivery.domain.coupon.CouponRepository;
 import SoftSquared.PeopleOfDelivery.domain.menu.Menu;
 import SoftSquared.PeopleOfDelivery.domain.menu.MenuRepository;
+import SoftSquared.PeopleOfDelivery.domain.order.Orders;
 import SoftSquared.PeopleOfDelivery.domain.order.OrdersRepository;
 import SoftSquared.PeopleOfDelivery.domain.store.Store;
 import SoftSquared.PeopleOfDelivery.domain.store.StoreRepository;
@@ -114,6 +115,8 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.name("test3")
 				.imageStatus(1)
 				.build());
+
+
 	}
 
 }

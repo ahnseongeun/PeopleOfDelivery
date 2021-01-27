@@ -29,13 +29,13 @@ public class Review extends BaseEntity {
     private String content;
 
     @Column(name = "star_count", nullable = false)
-    private Float starCount;
+    private Integer starCount;
 
     /**
      * 1은 사용, 2는 삭제
      */
     @Column(name = "status",nullable = false)
-    private Byte status;
+    private Integer status;
 
     @ManyToOne
     @JoinColumn(name = "order_id",nullable = false)

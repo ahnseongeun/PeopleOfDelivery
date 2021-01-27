@@ -49,6 +49,7 @@ public enum BaseResponseStatus {
     SUCCESS_READ_PAYMENT(true, 1037, "결제 내역 조회에 성공했습니다."),
     SUCCESS_UPDATE_PAYMENT(true, 1038, "결제 내역 수정에 성공했습니다."),
     SUCCESS_DELETE_PAYMENT(true, 1038, "결제 내역 삭제에 성공했습니다."),
+    SUCCESS_POST_REVIEW(true, 1039, "리뷰 추가에 성공했습니다."),
 
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
@@ -107,6 +108,7 @@ public enum BaseResponseStatus {
     FAILED_TO_GET_PAYMENT(false, 3048, "결제 내역을 가져오는데 실패 했습니다."),
     FAILED_TO_UPDATE_PAYMENT(false, 3049, "결제 내역 수정에 실패 했습니다."),
     FAILED_TO_DELETE_PAYMENT(false, 3050, "결제 내역 삭제에 실패 했습니다."),
+    FAILED_TO_POST_REVIEW(false, 3051, "리뷰 추가에 실패 했습니다."),
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),
     DATABASE_ERROR(false, 4001, "데이터베이스 연결에 실패하였습니다.");

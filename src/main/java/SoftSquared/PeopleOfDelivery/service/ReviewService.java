@@ -4,9 +4,7 @@ import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
 import SoftSquared.PeopleOfDelivery.domain.order.Orders;
 import SoftSquared.PeopleOfDelivery.domain.order.OrdersRepository;
-import SoftSquared.PeopleOfDelivery.domain.review.PostReviewRes;
-import SoftSquared.PeopleOfDelivery.domain.review.Review;
-import SoftSquared.PeopleOfDelivery.domain.review.ReviewRepository;
+import SoftSquared.PeopleOfDelivery.domain.review.*;
 import SoftSquared.PeopleOfDelivery.domain.store.Store;
 import SoftSquared.PeopleOfDelivery.domain.store.StoreRepository;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
@@ -39,6 +37,17 @@ public class ReviewService {
     }
 
 
+    /**
+     * 리뷰 추가
+     * @param role
+     * @param content
+     * @param startCount
+     * @param orderId
+     * @param userId
+     * @param storeId
+     * @return
+     * @throws BaseException
+     */
     public PostReviewRes createReview(Integer role,
                                       String content,
                                       Integer startCount,
@@ -93,5 +102,69 @@ public class ReviewService {
                 .storeId(newReview.getStore().getId())
                 .userId(newReview.getUser().getId())
                 .build();
+    }
+
+    /**
+     * 리뷰 수정
+     * @param reviewId
+     * @param role
+     * @param content
+     * @param startCount
+     * @return
+     * @throws BaseException
+     */
+    public GetReviewsRes updateReview(Long reviewId,
+                                      Integer role,
+                                      String content,
+                                      Integer startCount) throws BaseException {
+
+        Review review = reviewRepository.findByIdAndStatus(reviewId,1)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_REVIEW));
+
+        if(role == 50)
+            startCount = 0;
+
+        review.setContent(content).setStarCount(startCount);
+
+        try{
+            review = reviewRepository.save(review);
+        }catch (Exception e){
+            throw new BaseException(FAILED_TO_UPDATE_REVIEW);
+        }
+
+        return GetReviewsRes.builder()
+                .reviewId(review.getId())
+                .reviewContent(review.getContent())
+                .reviewStar(review.getStarCount())
+                .storeId(review.getStore().getId())
+                .orderId(review.getOrders().getId())
+                .userId(review.getUser().getId())
+                .build();
+
+    }
+
+    /**
+     * 리뷰 삭제
+     * @param reviewId
+     * @return
+     */
+    public DeleteReviewRes deleteReview(Long reviewId) throws BaseException {
+
+        Review review = reviewRepository.findByIdAndStatus(reviewId,1)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_REVIEW));
+
+        review.setStatus(2);
+
+        try{
+            review = reviewRepository.save(review);
+        }catch (Exception e){
+            throw new BaseException(FAILED_TO_DELETE_REVIEW);
+        }
+
+        return DeleteReviewRes.builder()
+                .reviewId(review.getId())
+                .status(review.getStatus())
+                .build();
+        
     }
 }

@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class GetOpponentReviewRes {
+public class DeleteReviewRes {
 
     private final Long reviewId;
-    private final String opponentReviewContent;
+    private final Integer status;
 }

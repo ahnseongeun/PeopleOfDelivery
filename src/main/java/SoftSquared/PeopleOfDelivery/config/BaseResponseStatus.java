@@ -53,6 +53,9 @@ public enum BaseResponseStatus {
     SUCCESS_READ_REVIEW(true, 1040, "리뷰 조회에 성공했습니다."),
     SUCCESS_READ_Opponent_REVIEW(true, 1041, "가게 주인 리뷰 조회에 성공했습니다."),
     SUCCESS_READ_STORE_REVIEW(true, 1042, "가게 리뷰 조회에 성공했습니다."),
+    SUCCESS_READ_REVIEWS(true, 1043, "전체 리뷰 조회에 성공했습니다."),
+    SUCCESS_UPDATE_REVIEW(true, 1044, "리뷰 수정에 성공했습니다."),
+    SUCCESS_DELETE_REVIEW(true, 1045, "리뷰 삭제에 성공했습니다."),
 
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
@@ -115,6 +118,9 @@ public enum BaseResponseStatus {
     FAILED_TO_DELETE_PAYMENT(false, 3050, "결제 내역 삭제에 실패 했습니다."),
     FAILED_TO_POST_REVIEW(false, 3051, "리뷰 추가에 실패 했습니다."),
     FAILED_TO_GET_REVIEW(false, 3052, "리뷰 조회 실패 했습니다."),
+    FAILED_TO_GET_REVIEWS(false, 3053, "리뷰 전체 조회에 실패 했습니다."),
+    FAILED_TO_UPDATE_REVIEW(false, 3054, "리뷰 수정에 실패 했습니다."),
+    FAILED_TO_DELETE_REVIEW(false, 3055, "리뷰 삭제에 실패 했습니다."),
 
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),

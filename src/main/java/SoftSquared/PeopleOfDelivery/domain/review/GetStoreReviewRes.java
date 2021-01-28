@@ -15,7 +15,9 @@ public class GetStoreReviewRes {
     private final Long storeId;
     private final String storeName;
     private final Double reviewTotalAvg;
-    private final List<Long> userIdReviewList;
+
+    //사용자 Review 조회 용도
+    private final List<ReviewRes> userIdAndOrderIdReviewList;
     private final Long review1Count;
     private final Long review2Count;
     private final Long review3Count;

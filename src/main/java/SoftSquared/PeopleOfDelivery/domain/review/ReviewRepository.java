@@ -22,5 +22,7 @@ public interface ReviewRepository extends CrudRepository<Review,Long> {
 
     Optional<Review> findByStoreAndOrdersAndUserNotAndStatus(Store store, Orders order, User user, Integer status);
 
-    List<Review> findByStoreAndUserAndStatus(Store store,Long hostId, Integer status);
+    List<Review> findByStoreAndUserAndStatus(Store store,User host, Integer status);
+
+    List<Review> findByOrdersAndStatus(Orders orders, Integer status);
 }

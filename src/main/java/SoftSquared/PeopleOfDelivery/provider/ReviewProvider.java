@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,8 +50,22 @@ public class ReviewProvider {
                 -> new BaseException(FAILED_TO_GET_USER));
 
         List<Orders> ordersList = user.getOrders();
-        //orderlist를 이용해서 review 전부 조회 후 반환
-        List<Review> reviewList = reviewRepository.findByUserAndStatus(user,1);
+
+        List<Review> reviewList = new LinkedList<>();
+        //orderList를 이용해서 review 전부 조회 후 반환
+        for(Orders orders : ordersList){
+            List<Review> reviews = reviewRepository.findByOrdersAndStatus(orders,1);
+
+            if(reviews.size() == 0)
+                continue;
+
+            /**
+             * 리스트를 다른 리스트에 한번엔 삽입하는 법
+             */
+            reviewList.addAll(reviews);
+        }
+
+
 
         /*
         가게 하나당 회원 리뷰 하나만 등록가능
@@ -58,9 +73,13 @@ public class ReviewProvider {
         if(reviewList.size() == 0)
             throw new BaseException(EMPTY_REVIEW);
 
+        Long newUserId = user.getId();
+
         return GetReviewRes.builder()
-                .userId(user.getId())
-                .reviewCount(reviewList.size())
+                .userId(newUserId)
+                .reviewCount((int) reviewList.stream()
+                        .filter(review -> review.getUser().getId().equals(newUserId))
+                        .count())
                 .getOrderReviewResList(reviewList.stream()
                         .map(review -> GetOrderReviewRes.builder()
                                 .reviewId(review.getId())
@@ -71,6 +90,7 @@ public class ReviewProvider {
                                 .userReviewContent(review.getContent())
                                 .orderId(review.getOrders().getId())
                                 .createReviewTime(review.getCreatedTime())
+                                .role(review.getUser().getRole())
                                 .build()).collect(Collectors.toList()))
                 .build();
     }
@@ -157,6 +177,10 @@ public class ReviewProvider {
             throw new BaseException(FAILED_TO_GET_REVIEW);
         }
 
+        Long hostId = store.getUser().getId();
+        long UserReviewCount = reviewList.stream().filter(review -> !review.getUser().getId().equals(hostId))
+                .count();
+
         return GetStoreReviewRes.builder()
                 .storeId(store.getId())
                 .storeName(store.getName())
@@ -168,7 +192,7 @@ public class ReviewProvider {
                                 .role(review.getUser().getRole())
                                 .build())
                         .collect(Collectors.toList()))
-                .reviewTotalAvg(reviewList.stream().mapToInt(Review::getStarCount).average().orElse(0))
+                .reviewTotalAvg((double) (reviewList.stream().mapToInt(Review::getStarCount).sum()/UserReviewCount))
                 .review1Count(reviewList.stream()
                         .filter(review -> review.getStarCount() == 1)
                         .count())

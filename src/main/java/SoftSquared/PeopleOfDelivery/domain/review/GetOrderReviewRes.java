@@ -20,5 +20,6 @@ public class GetOrderReviewRes {
     //private final String hostReviewContent; API 추가하는 것이 효율적
     private final Date createReviewTime;
     private final Integer reviewStar;
+    private final Integer role;
 
 }

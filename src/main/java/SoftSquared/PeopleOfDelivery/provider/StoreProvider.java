@@ -11,6 +11,7 @@ import SoftSquared.PeopleOfDelivery.domain.store.GetDetailStoreRes;
 import SoftSquared.PeopleOfDelivery.domain.store.GetStoreRes;
 import SoftSquared.PeopleOfDelivery.domain.store.Store;
 import SoftSquared.PeopleOfDelivery.domain.store.StoreRepository;
+import SoftSquared.PeopleOfDelivery.domain.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -70,9 +71,9 @@ public class StoreProvider {
         Store store = storeRepository.findByIdAndStatus(storeId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_DETAIL_STORE));
 
-        Long hostId = store.getUser().getId();
+        User host = store.getUser();
         int reviewCount = reviewRepository.findByStoreAndStatus(store, 1).size();
-        int hostReviewCount = reviewRepository.findByStoreAndUserAndStatus(store,hostId, 1).size();
+        int hostReviewCount = reviewRepository.findByStoreAndUserAndStatus(store,host, 1).size();
         return GetDetailStoreRes.builder()
                 .id(store.getId())
                 .name(store.getName())

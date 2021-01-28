@@ -14,7 +14,13 @@ import java.util.List;
  */
 public class GetShoppingBasketRes {
 
+    private final Long shoppingBasketId;
     private final String storeName;
     private final Long userId;
-    private final List<GetShoppingBasketMenuRes> getShoppingBasketMenuResList;
+    private final Long menuId;
+    private final String menuName;
+    private final Integer menuPrice;
+    private final Integer menuCount;
+    private final Long storeId;
+    //private final List<GetShoppingBasketMenuRes> getShoppingBasketMenuResList;
 }

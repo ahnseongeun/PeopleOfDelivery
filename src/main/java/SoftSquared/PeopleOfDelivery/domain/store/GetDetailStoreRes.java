@@ -20,8 +20,8 @@ public class GetDetailStoreRes {
     private final Integer lowBoundPrice;
     private final Integer deliveryFee;
     private final boolean choiceCheck;
-    private final Integer reviewCount;
-    private final Integer hostReviewCount;
+    private final Integer UserReviewCount;
+    private final Integer HostReviewCount;
     private final Float totalStarAverage;
     private final Integer pickStoreCount;
     private final String imageURL;

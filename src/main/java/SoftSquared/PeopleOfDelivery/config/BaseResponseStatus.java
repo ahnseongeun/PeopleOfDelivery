@@ -51,7 +51,8 @@ public enum BaseResponseStatus {
     SUCCESS_DELETE_PAYMENT(true, 1038, "결제 내역 삭제에 성공했습니다."),
     SUCCESS_POST_REVIEW(true, 1039, "리뷰 추가에 성공했습니다."),
     SUCCESS_READ_REVIEW(true, 1040, "리뷰 조회에 성공했습니다."),
-    SUCCESS_READ_HOST_REVIEW(true, 1041, "가게 주인 리뷰 조회에 성공했습니다."),
+    SUCCESS_READ_Opponent_REVIEW(true, 1041, "가게 주인 리뷰 조회에 성공했습니다."),
+    SUCCESS_READ_STORE_REVIEW(true, 1042, "가게 리뷰 조회에 성공했습니다."),
 
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),

@@ -15,6 +15,8 @@ import ch.qos.logback.classic.spi.IThrowableProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
 
 @Service
@@ -37,7 +39,8 @@ public class ReviewService {
     }
 
 
-    public PostReviewRes createReview(String content,
+    public PostReviewRes createReview(Integer role,
+                                      String content,
                                       Integer startCount,
                                       Long orderId,
                                       Long userId,
@@ -52,14 +55,22 @@ public class ReviewService {
         Orders orders = ordersRepository.findByIdAndStatus(orderId,2)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_ORDER));
 
-        //TODO
-        Review review = reviewRepository.findByStoreAndOrdersAndUserAndStatus(store,orders,user,1)
-                .orElse(null);
+        //TODO 리뷰를 찾으면 예외처리하기 , 없다면 그대로 진행
+        Optional<Review> review = Optional.empty();
 
-        if(review != null)
+        try{
+            review = reviewRepository.findByStoreAndOrdersAndUserAndStatus(store, orders, user, 1);
+        }catch (Exception ignored){
+
+        }
+
+        if(review.isPresent())
             throw new BaseException(DUPLICATED_REVIEW);
 
-        review = Review.builder()
+        if(role == 50)
+            startCount = 0;
+
+        Review newReview = Review.builder()
                 .content(content)
                 .starCount(startCount)
                 .orders(orders)
@@ -69,18 +80,18 @@ public class ReviewService {
                 .build();
 
         try{
-            review = reviewRepository.save(review);
+            newReview = reviewRepository.save(newReview);
         }catch (Exception e){
             throw new BaseException(FAILED_TO_POST_REVIEW);
         }
 
         return PostReviewRes.builder()
-                .reviewId(review.getId())
-                .content(review.getContent())
-                .starCount(review.getStarCount())
-                .orderId(review.getOrders().getId())
-                .storeId(review.getStore().getId())
-                .userId(review.getUser().getId())
+                .reviewId(newReview.getId())
+                .content(newReview.getContent())
+                .starCount(newReview.getStarCount())
+                .orderId(newReview.getOrders().getId())
+                .storeId(newReview.getStore().getId())
+                .userId(newReview.getUser().getId())
                 .build();
     }
 }

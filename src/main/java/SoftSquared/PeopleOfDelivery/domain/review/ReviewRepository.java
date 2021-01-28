@@ -12,4 +12,6 @@ public interface ReviewRepository extends CrudRepository<Review,Long> {
     List<Review> findByUserAndStatus(User user, Integer status);
 
     Optional<Review> findByStoreAndOrdersAndUserAndStatus(Store store, Orders orders, User user, Integer status);
+
+    List<Review> findByStoreAndUserNotAndStatus(Store store,User user,Integer status);
 }

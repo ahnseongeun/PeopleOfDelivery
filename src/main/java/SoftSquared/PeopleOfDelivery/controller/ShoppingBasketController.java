@@ -39,9 +39,9 @@ public class ShoppingBasketController {
     @ResponseBody
     @RequestMapping(value = "/baskets/{userId}",method = RequestMethod.GET)
     @ApiOperation(value = "회원 장바구니 조회 (회원 기능)", notes = "회원 장바구니 조회")
-    public BaseResponse<GetShoppingBasketRes> getBasket(
+    public BaseResponse<List<GetShoppingBasketRes>> getBasket(
             @PathVariable("userId") Long userId) throws BaseException{
-        GetShoppingBasketRes getShoppingBasketRes;
+        List<GetShoppingBasketRes> getShoppingBasketRes;
         try{
             getShoppingBasketRes = shoppingBasketProvider.retrieveShoppingBasket(userId);
             return new BaseResponse<>(SUCCESS_READ_SHOPPING_BASKET, getShoppingBasketRes);

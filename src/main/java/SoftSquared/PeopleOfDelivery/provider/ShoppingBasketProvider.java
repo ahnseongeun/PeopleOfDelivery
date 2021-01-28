@@ -43,7 +43,7 @@ public class ShoppingBasketProvider {
     private final List<GetMenuRes> getMenuResList;
     private final Integer totalPrice;
      */
-    public GetShoppingBasketRes retrieveShoppingBasket(Long userId) throws BaseException{
+    public List<GetShoppingBasketRes> retrieveShoppingBasket(Long userId) throws BaseException{
         User user = userRepository.findByIdAndStatus(userId,1).orElseThrow(()
                 -> new BaseException(FAILED_TO_GET_USER));
 
@@ -54,20 +54,35 @@ public class ShoppingBasketProvider {
         if(shoppingBasketList.size() == 0) {
             throw new BaseException(EMPTY_MENU);
         }
-        shoppingBasketStore = shoppingBasketList.get(0);
+        Long storeId = shoppingBasketList.get(0).getMenu().getStore().getId();
+        Long newUserId = shoppingBasketList.get(0).getUser().getId();
+        String storeName = shoppingBasketList.get(0).getMenu().getStore().getName();
 
-        return GetShoppingBasketRes.builder()
-                .storeName(shoppingBasketStore.getMenu().getStore().getName())
-                .getShoppingBasketMenuResList(shoppingBasketList.stream().map(shoppingBasket ->
-                        GetShoppingBasketMenuRes.builder()
-                                .id(shoppingBasket.getMenu().getId())
-                                .name(shoppingBasket.getMenu().getName())
-                                .price(shoppingBasket.getMenu().getPrice())
-                                .storeId(shoppingBasket.getMenu().getStore().getId())
-                                .menuCount(shoppingBasket.getMenuCount())
-                                .build()).collect(Collectors.toList()))
-                .userId(shoppingBasketStore.getUser().getId())
-                .build();
+        return shoppingBasketList.stream()
+                .map(shoppingBasket -> GetShoppingBasketRes.builder()
+                        .shoppingBasketId(shoppingBasket.getId())
+                        .storeId(storeId)
+                        .userId(newUserId)
+                        .menuId(shoppingBasket.getMenu().getId())
+                        .menuName(shoppingBasket.getMenu().getName())
+                        .menuCount(shoppingBasket.getMenuCount())
+                        .storeName(storeName)
+                        .menuPrice(shoppingBasket.getMenu().getPrice())
+                        .build())
+                .collect(Collectors.toList());
+
+//        return GetShoppingBasketRes.builder()
+//                .storeName(shoppingBasketStore.getMenu().getStore().getName())
+//                .getShoppingBasketMenuResList(shoppingBasketList.stream().map(shoppingBasket ->
+//                        GetShoppingBasketMenuRes.builder()
+//                                .id(shoppingBasket.getMenu().getId())
+//                                .name(shoppingBasket.getMenu().getName())
+//                                .price(shoppingBasket.getMenu().getPrice())
+//                                .storeId(shoppingBasket.getMenu().getStore().getId())
+//                                .menuCount(shoppingBasket.getMenuCount())
+//                                .build()).collect(Collectors.toList()))
+//                .userId(shoppingBasketStore.getUser().getId())
+//                .build();
     }
 
 

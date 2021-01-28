@@ -76,8 +76,8 @@ public class StoreProvider {
                 .deliveryFee(store.getDeliveryFee())
                 .imageURL(store.getImageURL())
                 .choiceCheck(true) //userId와 storeId를 이용해서 pick_store에 있는 지 확인 후 true/false
-                .reviewCount(store.getReviews().size())
-                .hostReviewCount(0) //review에서 제공
+                //.reviewCount(store.getReviews().size())
+                //.hostReviewCount(0) //review에서 제공
                 .totalStarAverage((float) 3.8) //review에서 제공
                 .pickStoreCount(10) // storeId를 이용해서 pick_store에 있는 있는 개수 만큼 count
                 .menuList(store.getMenus().stream()

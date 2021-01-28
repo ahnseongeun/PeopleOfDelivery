@@ -83,13 +83,13 @@ public class ReviewController {
     @ResponseBody
     @RequestMapping(value = "/user-reviews/{userId}",method = RequestMethod.GET)
     @ApiOperation(value = "내 리뷰 조회", notes = "내 리뷰 조회")
-    public BaseResponse<GetReviewRes> getReview(
+    public BaseResponse<GetReviewRes> getMyReview(
             @PathVariable("userId") Long userId) throws BaseException{
 
         GetReviewRes getReviewRes;
         try{
-            getReviewRes = reviewProvider.retrieveReview(userId);
-            return new BaseResponse<>(SUCCESS_READ_REVIEW, getReviewRes);
+            getReviewRes = reviewProvider.retrieveMyReview(userId);
+            return new BaseResponse<>(SUCCESS_READ_MY_REVIEW, getReviewRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
@@ -105,15 +105,15 @@ public class ReviewController {
 //            @RequestParam(value = "orderId") Long orderId,
 //            @RequestParam(value = "userId",required = false,defaultValue = "0") Long userId // userId가 있으면 가게 리뷰를 구할때 user Review를 구할 때 사용
     @ResponseBody
-    @RequestMapping(value = "/opponent-reviews/{reviewId}",method = RequestMethod.GET)
-    @ApiOperation(value = "가게 주인 리뷰 조회", notes = "가게 주인 리뷰 조회")
-    public BaseResponse<GetOpponentReviewRes> getOpponentReview(
+    @RequestMapping(value = "/reviews/{reviewId}",method = RequestMethod.GET)
+    @ApiOperation(value = " 리뷰 조회", notes = " 리뷰 조회")
+    public BaseResponse<GetReviewsRes> getReview(
             @PathVariable Long reviewId) throws BaseException{
 
-        GetOpponentReviewRes getOpponentReviewRes;
+        GetReviewsRes getReviewsRes;
         try{
-            getOpponentReviewRes = reviewProvider.retrieveOpponentReview(reviewId);
-            return new BaseResponse<>(SUCCESS_READ_Opponent_REVIEW, getOpponentReviewRes);
+            getReviewsRes = reviewProvider.retrieveReview(reviewId);
+            return new BaseResponse<>(SUCCESS_READ_REVIEW, getReviewsRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }

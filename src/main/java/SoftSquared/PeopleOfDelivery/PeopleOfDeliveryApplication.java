@@ -6,6 +6,9 @@ import SoftSquared.PeopleOfDelivery.domain.menu.Menu;
 import SoftSquared.PeopleOfDelivery.domain.menu.MenuRepository;
 import SoftSquared.PeopleOfDelivery.domain.order.Orders;
 import SoftSquared.PeopleOfDelivery.domain.order.OrdersRepository;
+import SoftSquared.PeopleOfDelivery.domain.review.ReviewRepository;
+import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.ShoppingBasket;
+import SoftSquared.PeopleOfDelivery.domain.shoppingBasket.ShoppingBasketRepository;
 import SoftSquared.PeopleOfDelivery.domain.store.Store;
 import SoftSquared.PeopleOfDelivery.domain.store.StoreRepository;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
@@ -22,17 +25,23 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 	private final OrdersRepository ordersRepository;
 	private final CouponRepository couponRepository;
 	private final MenuRepository menuRepository;
+	private final ShoppingBasketRepository shoppingBasketRepository;
+	private final ReviewRepository reviewRepository;
 
 	public PeopleOfDeliveryApplication(UserRepository userRepository,
 									   StoreRepository storeRepository,
 									   OrdersRepository ordersRepository,
 									   CouponRepository couponRepository,
-									   MenuRepository menuRepository) {
+									   MenuRepository menuRepository,
+									   ShoppingBasketRepository shoppingBasketRepository,
+									   ReviewRepository reviewRepository) {
 		this.userRepository = userRepository;
 		this.storeRepository = storeRepository;
 		this.ordersRepository = ordersRepository;
 		this.couponRepository = couponRepository;
 		this.menuRepository = menuRepository;
+		this.shoppingBasketRepository = shoppingBasketRepository;
+		this.reviewRepository = reviewRepository;
 	}
 
 	public static void main(String[] args) {
@@ -52,6 +61,16 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.coupon5000(0)
 				.build());
 
+		User host = userRepository.save(new User("hostName1","host@naver.com","123321","010-1111-2272"
+				,"서울시송파구잠실6동", 50,1,"1995-03-10",1));
+
+		couponRepository.save(Coupon.builder()
+				.user(host)
+				.coupon1000(5)
+				.coupon3000(5)
+				.coupon5000(0)
+				.build());
+
 		/**
 		 * 주문 많은순
 		 * store 2개 추가
@@ -66,24 +85,24 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.lowBoundPrice(5000)
 				.deliveryFee(3000)
 				.description("testCase입니다.")
-				.user(userRepository.findById(1L).orElseGet(null))
+				.user(userRepository.findById(2L).orElseGet(null))
 				.imageURL("testURI")
 				.status(1)
 				.build());
-		storeRepository.save(Store.builder()
-				.id(2L)
-				.name("testStore2")
-				.phoneNumber("010-1111-1112")
-				.location("서울시")
-				.lowBoundPrice(4000)
-				.deliveryFee(4000)
-				.description("testCase2입니다.")
-				.user(userRepository.findById(1L).orElseGet(null))
-				.imageURL("testURI")
-				.status(1)
-				.build());
+//		storeRepository.save(Store.builder()
+//				.id(2L)
+//				.name("testStore2")
+//				.phoneNumber("010-1111-1112")
+//				.location("서울시")
+//				.lowBoundPrice(4000)
+//				.deliveryFee(4000)
+//				.description("testCase2입니다.")
+//				.user(userRepository.findById(2L).orElseGet(null))
+//				.imageURL("testURI")
+//				.status(1)
+//				.build());
 
-		menuRepository.save(Menu.builder()
+		Menu menu1 = menuRepository.save(Menu.builder()
 				.store(store)
 				.popularCheck(1)
 				.description("test1")
@@ -94,7 +113,7 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.imageStatus(2)
 				.build());
 
-		menuRepository.save(Menu.builder()
+		Menu menu2 = menuRepository.save(Menu.builder()
 				.store(store)
 				.popularCheck(1)
 				.description("test2")
@@ -105,7 +124,7 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.imageStatus(1)
 				.build());
 
-		menuRepository.save(Menu.builder()
+		Menu menu3 = menuRepository.save(Menu.builder()
 				.store(store)
 				.popularCheck(1)
 				.description("test3")
@@ -116,7 +135,19 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.imageStatus(1)
 				.build());
 
+		shoppingBasketRepository.save(ShoppingBasket.builder()
+				.menu(menu1)
+				.menuCount(2)
+				.user(user)
+				.status(1)
+				.build());
 
+		shoppingBasketRepository.save(ShoppingBasket.builder()
+				.menu(menu2)
+				.menuCount(3)
+				.user(user)
+				.status(1)
+				.build());
 	}
 
 }

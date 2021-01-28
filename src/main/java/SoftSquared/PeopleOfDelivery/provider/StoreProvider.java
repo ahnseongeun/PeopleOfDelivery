@@ -2,10 +2,11 @@ package SoftSquared.PeopleOfDelivery.provider;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.domain.categoryStore.CategoryStoreRepository;
-import SoftSquared.PeopleOfDelivery.domain.catrgory.Category;
 import SoftSquared.PeopleOfDelivery.domain.catrgory.CategoryRepository;
 import SoftSquared.PeopleOfDelivery.domain.menu.GetMenuRes;
 import SoftSquared.PeopleOfDelivery.domain.order.OrdersRepository;
+import SoftSquared.PeopleOfDelivery.domain.review.Review;
+import SoftSquared.PeopleOfDelivery.domain.review.ReviewRepository;
 import SoftSquared.PeopleOfDelivery.domain.store.GetDetailStoreRes;
 import SoftSquared.PeopleOfDelivery.domain.store.GetStoreRes;
 import SoftSquared.PeopleOfDelivery.domain.store.Store;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
@@ -30,14 +30,17 @@ public class StoreProvider {
     private final StoreRepository storeRepository;
     private final CategoryRepository categoryRepository;
     private final OrdersRepository ordersRepository;
+    private final ReviewRepository reviewRepository;
 
     @Autowired
     public StoreProvider(CategoryStoreRepository categoryStoreRepository, StoreRepository storeRepository,
-                         CategoryRepository categoryRepository, OrdersRepository ordersRepository){
+                         CategoryRepository categoryRepository, OrdersRepository ordersRepository,
+                         ReviewRepository reviewRepository){
         this.categoryStoreRepository = categoryStoreRepository;
         this.storeRepository = storeRepository;
         this.categoryRepository = categoryRepository;
         this.ordersRepository = ordersRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     /**
@@ -67,6 +70,9 @@ public class StoreProvider {
         Store store = storeRepository.findByIdAndStatus(storeId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_DETAIL_STORE));
 
+        Long hostId = store.getUser().getId();
+        int reviewCount = reviewRepository.findByStoreAndStatus(store, 1).size();
+        int hostReviewCount = reviewRepository.findByStoreAndUserAndStatus(store,hostId, 1).size();
         return GetDetailStoreRes.builder()
                 .id(store.getId())
                 .name(store.getName())
@@ -76,9 +82,9 @@ public class StoreProvider {
                 .deliveryFee(store.getDeliveryFee())
                 .imageURL(store.getImageURL())
                 .choiceCheck(true) //userId와 storeId를 이용해서 pick_store에 있는 지 확인 후 true/false
-                //.reviewCount(store.getReviews().size())
-                //.hostReviewCount(0) //review에서 제공
-                .totalStarAverage((float) 3.8) //review에서 제공
+                .userReviewCount(reviewCount - hostReviewCount)
+                .hostReviewCount(hostReviewCount) //review에서 제공
+                //.totalStarAverage((float) 3.8) //review에서 제공
                 .pickStoreCount(10) // storeId를 이용해서 pick_store에 있는 있는 개수 만큼 count
                 .menuList(store.getMenus().stream()
                         .filter(menu -> menu.getStatus() == 1) //Status가 1인 것만 출력

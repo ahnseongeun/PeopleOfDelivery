@@ -12,4 +12,5 @@ public class ReviewRes {
     private final Long orderId;
     private final Long reviewId;
     private final Long userId;
+    private final Integer role;
 }

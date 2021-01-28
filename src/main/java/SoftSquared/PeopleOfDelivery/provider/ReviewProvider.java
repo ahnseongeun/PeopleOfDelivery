@@ -43,11 +43,13 @@ public class ReviewProvider {
      * @return
      * @throws BaseException
      */
-    public GetReviewRes retrieveReview(Long userId) throws BaseException {
+    public GetReviewRes retrieveMyReview(Long userId) throws BaseException {
 
         User user = userRepository.findByIdAndStatus(userId,1).orElseThrow(()
                 -> new BaseException(FAILED_TO_GET_USER));
 
+        List<Orders> ordersList = user.getOrders();
+        //orderlist를 이용해서 review 전부 조회 후 반환
         List<Review> reviewList = reviewRepository.findByUserAndStatus(user,1);
 
         /*
@@ -78,7 +80,7 @@ public class ReviewProvider {
      * @return
      * @throws BaseException
      */
-    public GetOpponentReviewRes retrieveOpponentReview(Long reviewId) throws BaseException{
+    public GetReviewsRes retrieveReview(Long reviewId) throws BaseException{
 
         
 //        Store store = storeRepository.findByIdAndStatus(storeId,1).orElseThrow(()
@@ -99,17 +101,21 @@ public class ReviewProvider {
         review = reviewRepository.findByIdAndStatus(reviewId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_REVIEW));
 
-        Store store = review.getStore();
-        Orders order = review.getOrders();
-        User user = review.getUser();
+//        Store store = review.getStore();
+//        Orders order = review.getOrders();
+//        User user = review.getUser();
+//
+//        //반대 사람 review 내용 조회
+//            review = reviewRepository.findByStoreAndOrdersAndUserNotAndStatus(store,order,user,1)
+//                .orElseThrow(() -> new BaseException(FAILED_TO_GET_REVIEW));
 
-        //반대 사람 review 내용 조회
-            review = reviewRepository.findByStoreAndOrdersAndUserNotAndStatus(store,order,user,1)
-                .orElseThrow(() -> new BaseException(FAILED_TO_GET_REVIEW));
-
-        return GetOpponentReviewRes.builder()
+        return GetReviewsRes.builder()
                 .reviewId(review.getId())
-                .opponentReviewContent(review.getContent())
+                .userId(review.getUser().getId())
+                .orderId(review.getOrders().getId())
+                .storeId(review.getStore().getId())
+                .reviewStar(review.getStarCount())
+                .reviewContent(review.getContent())
                 .build();
 
     }
@@ -146,7 +152,7 @@ public class ReviewProvider {
         user review
          */
         try{
-            reviewList = reviewRepository.findByStoreAndUserNotAndStatus(store,user,1);
+            reviewList = reviewRepository.findByStoreAndStatus(store,1);
         }catch (Exception exception){
             throw new BaseException(FAILED_TO_GET_REVIEW);
         }
@@ -159,6 +165,7 @@ public class ReviewProvider {
                                 .userId(review.getUser().getId())
                                 .orderId(review.getOrders().getId())
                                 .reviewId(review.getId())
+                                .role(review.getUser().getRole())
                                 .build())
                         .collect(Collectors.toList()))
                 .reviewTotalAvg(reviewList.stream().mapToInt(Review::getStarCount).average().orElse(0))
@@ -206,4 +213,5 @@ public class ReviewProvider {
                 .build())
                 .collect(Collectors.toList());
     }
+
 }

@@ -1,9 +1,12 @@
 package SoftSquared.PeopleOfDelivery.provider;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
+import SoftSquared.PeopleOfDelivery.config.secret.Secret;
+import SoftSquared.PeopleOfDelivery.domain.user.PostLoginRes;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
 import SoftSquared.PeopleOfDelivery.domain.user.UserRepository;
 import SoftSquared.PeopleOfDelivery.domain.user.GetUserRes;
+import SoftSquared.PeopleOfDelivery.utils.AES128;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -118,4 +121,6 @@ public class UserProvider {
 
         return user;
     }
+
+
 }

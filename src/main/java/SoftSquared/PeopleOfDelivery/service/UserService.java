@@ -7,6 +7,7 @@ import SoftSquared.PeopleOfDelivery.domain.coupon.CouponRepository;
 import SoftSquared.PeopleOfDelivery.domain.user.*;
 import SoftSquared.PeopleOfDelivery.provider.UserProvider;
 import SoftSquared.PeopleOfDelivery.utils.AES128;
+import SoftSquared.PeopleOfDelivery.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,14 +23,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final CouponRepository couponRepository;
     private final UserProvider userProvider;
+    private final JwtService jwtService;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        CouponRepository couponRepository,
-                       UserProvider userProvider) {
+                       UserProvider userProvider,
+                       JwtService jwtService) {
         this.userRepository = userRepository;
         this.couponRepository = couponRepository;
         this.userProvider = userProvider;
+        this.jwtService = jwtService;
     }
 
 
@@ -171,6 +175,37 @@ public class UserService {
         return DeleteUserRes.builder()
                 .userId(user.getId())
                 .status(user.getStatus())
+                .build();
+    }
+
+    /**
+     * 로그인
+     * @param email
+     * @param password
+     * @return
+     */
+    public PostLoginRes login(String email, String password) throws BaseException{
+        User user= userRepository.findByEmailAndStatus(email,1)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+
+        // 2. UserInfo에서 password 추출
+        String comparePassword;
+        try {
+            comparePassword = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(user.getPassword());
+        } catch (Exception ignored) {
+            throw new BaseException(FAILED_TO_LOGIN);
+        }
+
+        // 3. 비밀번호 일치 여부 확인
+        if (!password.equals(comparePassword)) {
+            throw new BaseException(WRONG_PASSWORD);
+        }
+
+        // 3. Create JWT
+        String jwt = jwtService.createJwt(user.getId(),user.getRole());
+
+        return PostLoginRes.builder()
+                .jwt(jwt)
                 .build();
     }
 }

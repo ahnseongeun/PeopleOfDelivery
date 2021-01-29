@@ -2,12 +2,19 @@ package SoftSquared.PeopleOfDelivery.controller;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
+import SoftSquared.PeopleOfDelivery.domain.user.GetUserInfo;
+import SoftSquared.PeopleOfDelivery.domain.user.GetUserRes;
 import SoftSquared.PeopleOfDelivery.domain.user.PostLoginRes;
 import SoftSquared.PeopleOfDelivery.provider.UserProvider;
 import SoftSquared.PeopleOfDelivery.service.UserService;
 import SoftSquared.PeopleOfDelivery.utils.JwtService;
+import io.jsonwebtoken.Claims;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +23,7 @@ import static SoftSquared.PeopleOfDelivery.utils.ValidationRegex.isRegexEmail;
 
 @Controller
 @RequestMapping(value = "/api")
+@Slf4j
 public class LoginController {
 
     private final JwtService jwtService;
@@ -56,19 +64,24 @@ public class LoginController {
     }
 
 
-//    /**
-//     * JWT 검증 API
-//     * [GET] /users/jwt
-//     * @return BaseResponse<Void>
-//     */
-//    @GetMapping("/jwt")
-//    public BaseResponse<Void> jwt() {
-//        try {
-//            GetUserInfo getUserInfo = jwtService.getUserInfo();
-//            userInfoProvider.retrieveUserInfo(userId);
-//            return new BaseResponse<>(SUCCESS_JWT);
-//        } catch (BaseException | BaseException exception) {
-//            return new BaseResponse<>(exception.getStatus());
-//        }
-//    }
+    /**
+     * JWT 검증 API
+     * [GET] /users/jwt
+     * @return BaseResponse<Void>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/users/jwt",method = RequestMethod.GET)
+    @ApiOperation(value = "jwt 검증", notes = "jwt 검증")
+    public BaseResponse<Void> jwt(
+    ) throws BaseException {
+
+        try {
+            GetUserInfo getUserInfo = jwtService.getUserInfo();
+            userProvider.retrieveUser(getUserInfo.getUserid());
+            return new BaseResponse<>(SUCCESS_JWT);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 }

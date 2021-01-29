@@ -2,12 +2,10 @@ package SoftSquared.PeopleOfDelivery.controller;
 
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
-import SoftSquared.PeopleOfDelivery.domain.user.DeleteUserRes;
-import SoftSquared.PeopleOfDelivery.domain.user.GetUserRes;
-import SoftSquared.PeopleOfDelivery.domain.user.PostUserRes;
-import SoftSquared.PeopleOfDelivery.domain.user.UpdateUserRes;
+import SoftSquared.PeopleOfDelivery.domain.user.*;
 import SoftSquared.PeopleOfDelivery.provider.UserProvider;
 import SoftSquared.PeopleOfDelivery.service.UserService;
+import SoftSquared.PeopleOfDelivery.utils.JwtService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,12 +23,15 @@ public class UserController {
 
     private final UserService userService;
     private final UserProvider userProvider;
+    private final JwtService jwtService;
 
 
     @Autowired
-    public UserController(UserService userService, UserProvider userProvider){
+    public UserController(UserService userService, UserProvider userProvider,
+                          JwtService jwtService){
         this.userProvider = userProvider;
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -46,6 +47,11 @@ public class UserController {
     public BaseResponse<List<GetUserRes>> getUsers(
             @RequestParam(value = "name",required = false) String name) {
        try{
+           GetUserInfo getUserInfo = jwtService.getUserInfo();
+
+           if(!getUserInfo.getRole().equals(100))
+               throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+
            List<GetUserRes> getUsersResList = userProvider.retrieveUserList(name);
            if (name == null) {
                return new BaseResponse<>(SUCCESS_READ_USERS, getUsersResList);
@@ -68,6 +74,11 @@ public class UserController {
     @ApiOperation(value = "회원 프로필 조회 (회원 기능)", notes = "회원 프로필 조회")
     public BaseResponse<GetUserRes> getUser(
             @PathVariable("user-id") Long userId){
+
+
+        if(!getUserInfo.getRole().equals(100))
+            throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+
         if(userId <= 0) {
             return new BaseResponse<>(EMPTY_USERID);
         }

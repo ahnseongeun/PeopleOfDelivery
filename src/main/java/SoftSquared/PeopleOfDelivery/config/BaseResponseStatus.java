@@ -74,6 +74,7 @@ public enum BaseResponseStatus {
     EMPTY_PAYMENT(false, 2043, "결제 내역이 비었습니다."),
     EMPTY_REVIEW(false, 2044, "리뷰 내역이 비었습니다."),
     DUPLICATED_REVIEW(false, 2045, "리뷰가 이미 존재합니다."),
+    NOT_AUTEHNTICATION(false, 2046, "권한임 없스니다."),
 
     // 3000 : Response 오류
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
@@ -121,6 +122,7 @@ public enum BaseResponseStatus {
     FAILED_TO_GET_REVIEWS(false, 3053, "리뷰 전체 조회에 실패 했습니다."),
     FAILED_TO_UPDATE_REVIEW(false, 3054, "리뷰 수정에 실패 했습니다."),
     FAILED_TO_DELETE_REVIEW(false, 3055, "리뷰 삭제에 실패 했습니다."),
+    FAILED_TO_GET_AUTHENTICATION(false, 3057, "권한 획득에 실패했습니다."),
 
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),

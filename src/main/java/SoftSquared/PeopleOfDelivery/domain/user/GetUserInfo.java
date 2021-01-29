@@ -10,5 +10,6 @@ import lombok.Getter;
 public class GetUserInfo {
 
     private final Long userid;
+    private final String name;
     private final Integer role;
 }

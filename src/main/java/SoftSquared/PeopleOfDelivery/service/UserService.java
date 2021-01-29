@@ -202,10 +202,14 @@ public class UserService {
         }
 
         // 3. Create JWT
-        String jwt = jwtService.createJwt(user.getId(),user.getRole());
+        String accessToken = jwtService.createAccessToken(user.getId(),user.getRole());
+
+        // 4. Refresh JWT
+        String refreshToken = jwtService.createRefreshToken(user.getId(),user.getRole());
 
         return PostLoginRes.builder()
-                .jwt(jwt)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 }

@@ -5,8 +5,11 @@ import SoftSquared.PeopleOfDelivery.config.BaseResponse;
 import SoftSquared.PeopleOfDelivery.domain.review.*;
 import SoftSquared.PeopleOfDelivery.provider.ReviewProvider;
 import SoftSquared.PeopleOfDelivery.service.ReviewService;
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +18,7 @@ import java.util.List;
 
 import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
 
+@Slf4j
 @Controller
 @RequestMapping(value = "/api")
 public class ReviewController {
@@ -34,7 +38,6 @@ public class ReviewController {
      * @param content
      * @param startCount
      * @param orderId
-     * @param userId
      * @param storeId
      * @return
      * @throws IOException
@@ -43,15 +46,30 @@ public class ReviewController {
     @RequestMapping(value = "/reviews",method = RequestMethod.POST)
     @ApiOperation(value = "리뷰 추가하기", notes = "리뷰 추가하기")
     public BaseResponse<PostReviewRes> createReview(
-            @RequestParam(value = "role") Integer role,
+            //@RequestParam(value = "role") Integer role,
             @RequestParam(value = "content") String content,
             @RequestParam(value = "starCount",required = false,defaultValue = "3") Integer startCount,
             @RequestParam(value = "orderId") Long orderId,
-            @RequestParam(value = "userId") Long userId,
-            @RequestParam(value = "storeId") Long storeId) throws IOException {
+            //@RequestParam(value = "userId") Long userId,
+            @RequestParam(value = "storeId") Long storeId,
+            Authentication authentication
+    ) throws IOException {
 
 
         try{
+
+            if(authentication == null){
+                throw new BaseException(EMPTY_AUTHENTICATION);
+            }
+            Claims claims= (Claims) authentication.getPrincipal();
+            int role = claims.get("role", Integer.class);
+            long userId = claims.get("userId",Integer.class);
+            log.info("리뷰 추가하기");
+
+            if(role != 1 && role != 50) {
+                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+            }
+
             PostReviewRes postReviewRes = reviewService.createReview(
                     role,content,startCount,orderId,userId,storeId
             );
@@ -68,11 +86,25 @@ public class ReviewController {
      */
     @ResponseBody
     @RequestMapping(value = "/reviews",method = RequestMethod.GET)
-    @ApiOperation(value = "전체 리뷰 조회", notes = "전체 리뷰 조회")
-    public BaseResponse<List<GetReviewsRes>> getReviews() throws BaseException{
+    @ApiOperation(value = "전체 리뷰 조회 (관리자 기능)", notes = "전체 리뷰 조회")
+    public BaseResponse<List<GetReviewsRes>> getReviews(
+            Authentication authentication
+    ) throws BaseException{
 
         List<GetReviewsRes> getReviewsResList;
         try{
+
+            if(authentication == null){
+                throw new BaseException(EMPTY_AUTHENTICATION);
+            }
+            Claims claims= (Claims) authentication.getPrincipal();
+            int role = claims.get("role", Integer.class);
+            log.info("전체 리뷰 조회");
+
+            if(role != 100) {
+                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+            }
+
             getReviewsResList = reviewProvider.retrieveReviewList();
             return new BaseResponse<>(SUCCESS_READ_REVIEWS, getReviewsResList);
         }catch(BaseException exception){
@@ -81,13 +113,28 @@ public class ReviewController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/user-reviews/{userId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/user-reviews/me",method = RequestMethod.GET)
     @ApiOperation(value = "내 리뷰 조회", notes = "내 리뷰 조회")
     public BaseResponse<GetReviewRes> getMyReview(
-            @PathVariable("userId") Long userId) throws BaseException{
+            //@PathVariable("userId") Long userId
+            Authentication authentication
+             ) throws BaseException{
 
         GetReviewRes getReviewRes;
         try{
+
+            if(authentication == null){
+                throw new BaseException(EMPTY_AUTHENTICATION);
+            }
+            Claims claims= (Claims) authentication.getPrincipal();
+            int role = claims.get("role", Integer.class);
+            long userId = claims.get("userId",Integer.class);
+            log.info("내 리뷰 조회");
+
+            if(role != 1 && role != 50) {
+                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+            }
+
             getReviewRes = reviewProvider.retrieveMyReview(userId);
             return new BaseResponse<>(SUCCESS_READ_MY_REVIEW, getReviewRes);
         }catch(BaseException exception){
@@ -150,13 +197,26 @@ public class ReviewController {
     @ApiOperation(value = "리뷰 수정", notes = "리뷰 수정")
     public BaseResponse<GetReviewsRes> updateReview(
             @PathVariable("reviewId") Long reviewId,
-            @RequestParam(value = "role") Integer role,
+            //@RequestParam(value = "role") Integer role,
             @RequestParam(value = "content") String content,
-            @RequestParam(value = "starCount",required = false,defaultValue = "3") Integer startCount
+            @RequestParam(value = "starCount",required = false,defaultValue = "3") Integer startCount,
+            Authentication authentication
             ) throws BaseException{
 
         GetReviewsRes getReviewsRes;
         try{
+
+            if(authentication == null){
+                throw new BaseException(EMPTY_AUTHENTICATION);
+            }
+            Claims claims= (Claims) authentication.getPrincipal();
+            int role = claims.get("role", Integer.class);
+            log.info("리뷰 수정");
+
+            if(role != 1 && role != 50) {
+                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+            }
+
             getReviewsRes = reviewService.updateReview(reviewId,role,content,startCount);
             return new BaseResponse<>(SUCCESS_UPDATE_REVIEW, getReviewsRes);
         }catch(BaseException exception){
@@ -171,13 +231,27 @@ public class ReviewController {
      * @throws BaseException
      */
     @ResponseBody
-    @RequestMapping(value = "/reviews/{reviewId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/reviews/delete/{reviewId}",method = RequestMethod.PATCH)
     @ApiOperation(value = "리뷰 삭제", notes = "리뷰 삭제")
     public BaseResponse<DeleteReviewRes> deleteReview(
-            @PathVariable("reviewId") Long reviewId) throws BaseException{
+            @PathVariable("reviewId") Long reviewId,
+            Authentication authentication
+    ) throws BaseException{
 
         DeleteReviewRes DeleteReviewRes;
         try{
+
+            if(authentication == null){
+                throw new BaseException(EMPTY_AUTHENTICATION);
+            }
+            Claims claims= (Claims) authentication.getPrincipal();
+            int role = claims.get("role", Integer.class);
+            log.info("리뷰 삭제");
+
+            if(role != 1 && role != 50) {
+                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+            }
+
             DeleteReviewRes = reviewService.deleteReview(reviewId);
             return new BaseResponse<>(SUCCESS_DELETE_REVIEW, DeleteReviewRes);
         }catch(BaseException exception){

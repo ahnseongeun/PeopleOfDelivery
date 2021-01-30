@@ -57,6 +57,8 @@ public enum BaseResponseStatus {
     SUCCESS_UPDATE_REVIEW(true, 1044, "리뷰 수정에 성공했습니다."),
     SUCCESS_DELETE_REVIEW(true, 1045, "리뷰 삭제에 성공했습니다."),
     SUCCESS_LOGOUT(true, 1046, "로그 아웃에 성공했습니다."),
+    SUCCESS_REFRESH_JWT(true, 1047, "JWT 갱신에 성공했습니다."),
+
 
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
@@ -78,7 +80,8 @@ public enum BaseResponseStatus {
     NOT_AUTEHNTICATION(false, 2046, "권한임 없스니다."),
     ALREADY_LOGOUT(false,2047,"이미 로그아웃 처리되었습니다."),
     EXPIRED_JWT(false,2048,"JWT가 만료되었습니다"),
-
+    EXPIRED_REFRESH_JWT(false,2049,"REFRESH JWT가 만료되었습니다"),
+    INVAILD_REFRESH_JWT(false,2050,"유효하지 않은 JWT입니다."),
     // 3000 : Response 오류
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
     NOT_FOUND_USER(false, 3010, "존재하지 않는 회원입니다."),
@@ -126,6 +129,7 @@ public enum BaseResponseStatus {
     FAILED_TO_UPDATE_REVIEW(false, 3054, "리뷰 수정에 실패 했습니다."),
     FAILED_TO_DELETE_REVIEW(false, 3055, "리뷰 삭제에 실패 했습니다."),
     FAILED_TO_GET_AUTHENTICATION(false, 3057, "권한 획득에 실패했습니다."),
+
 
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),

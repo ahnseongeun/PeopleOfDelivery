@@ -114,8 +114,8 @@ public class UserController {
             @RequestParam(name = "name") String name,
             @RequestParam(name = "email") String email,
             @RequestParam(name = "password") String password,
-            @RequestParam(name = "confirm-password") String confirmPassword,
-            @RequestParam(name = "phone-number") String phoneNumber,
+            @RequestParam(name = "confirmPassword") String confirmPassword,
+            @RequestParam(name = "phoneNumber") String phoneNumber,
             @RequestParam(name = "role") Integer role,
             @RequestParam(name = "birthdate") String birthdate,
             @RequestParam(name = "gender") Integer gender){

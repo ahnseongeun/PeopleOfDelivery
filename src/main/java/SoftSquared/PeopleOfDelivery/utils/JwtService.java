@@ -3,7 +3,9 @@ package SoftSquared.PeopleOfDelivery.utils;
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.secret.Secret;
 import SoftSquared.PeopleOfDelivery.domain.user.GetUserInfo;
+import SoftSquared.PeopleOfDelivery.domain.user.PostLoginRes;
 import io.jsonwebtoken.*;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -86,7 +88,7 @@ public class JwtService {
 
         // 1.5 logout 확인
         if(tokenRepository.get(accessToken) != null){
-            log.info("로그아웃 확인"+String.valueOf(tokenRepository.get(accessToken)));
+            log.info("로그아웃 확인: " +String.valueOf(tokenRepository.get(accessToken)));
             throw new BaseException(ALREADY_LOGOUT);
         }
 
@@ -107,17 +109,6 @@ public class JwtService {
         }
 
 
-
-
-//        boolean isNotExpire = false;
-//        try{
-//            isNotExpire = claims.getBody().getExpiration().after(new Date());
-//            log.info("good:"+isNotExpire);
-//        }catch (Exception exception){
-//            log.info("failed:"+isNotExpire);
-//            throw new BaseException(EXPIRED_JWT);
-//        }
-
         // 3. userInfo 추출
         return GetUserInfo.builder()
                 .userid((long)claims.getBody().get("userId", Integer.class))
@@ -125,11 +116,59 @@ public class JwtService {
                 .build();
     }
 
-    public Claims getClaims(String token) {
+    public Claims getClaims(String token) throws BaseException {
+        Jws<Claims> claims;
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(Secret.JWT_SECRET_KEY)
+                    .parseClaimsJws(token);
+
+        } catch (ExpiredJwtException exception) {
+            log.info("JWT가 만료되었습니다.");
+            throw new BaseException(EXPIRED_JWT);
+        }catch (Exception e){
+            log.info("유효하지 않은 JWT 입니다.");
+            throw new BaseException(INVALID_JWT);
+        }
         return Jwts.parser()
                 .setSigningKey(Secret.JWT_SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody();
     }
 
+
+
+    public PostLoginRes refreshJwt() throws BaseException{
+        log.info("Refresh JWT 검증 시작");
+        String refreshToken = getJwt();
+        if (refreshToken == null || refreshToken.length() == 0) {
+            throw new BaseException(EMPTY_JWT);
+        }
+        // 2. JWT parsing
+        Jws<Claims> claims;
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(Secret.JWT_SECRET_KEY)
+                    .parseClaimsJws(refreshToken);
+
+        } catch (ExpiredJwtException exception) {
+            log.info("Refresh JWT가 만료되었습니다.\n"+ "로그인을 다시 해주세요.");
+            throw new BaseException(EXPIRED_REFRESH_JWT);
+        }catch (Exception e){
+            log.info("유효하지 않은 JWT 입니다.\n"+ "로그인을 다시 해주세요.");
+            throw new BaseException(INVAILD_REFRESH_JWT);
+        }
+
+        Long userId = (long) claims.getBody().get("userId",Integer.class);
+        Integer role = claims.getBody().get("role", Integer.class);
+
+        String accessToken = createAccessToken(userId,role);
+
+        // 3. userInfo 추출
+        return PostLoginRes.builder()
+                .userId(userId)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
 }

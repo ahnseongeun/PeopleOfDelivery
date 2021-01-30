@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -96,6 +97,27 @@ public class LoginController {
             GetUserInfo getUserInfo = jwtService.getUserInfo();
             userProvider.retrieveUser(getUserInfo.getUserid());
             return new BaseResponse<>(SUCCESS_JWT);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * Refresh Token
+     * [GET] /users/jwt
+     * @return BaseResponse<Void>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/refresh/jwt",method = RequestMethod.GET)
+    @ApiOperation(value = "refresh jwt", notes = "refresh jwt")
+    public BaseResponse<PostLoginRes> refreshJWT(
+           // @RequestParam(value = "expiredJwt") String expiredJwt
+           ) throws BaseException {
+
+        try {
+            PostLoginRes postLoginRes = jwtService.refreshJwt();
+            //userProvider.retrieveUser(postLoginRes.getUserId());
+            return new BaseResponse<>(SUCCESS_REFRESH_JWT,postLoginRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
+import java.util.HashMap;
+
 import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
 import static SoftSquared.PeopleOfDelivery.config.secret.Secret.FILE_UPLOAD_DIRECTORY;
 
@@ -24,16 +27,18 @@ public class UserService {
     private final CouponRepository couponRepository;
     private final UserProvider userProvider;
     private final JwtService jwtService;
+    private final HashMap<String,Date> tokenRepository;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        CouponRepository couponRepository,
                        UserProvider userProvider,
-                       JwtService jwtService) {
+                       JwtService jwtService, HashMap<String, Date> tokenRepository) {
         this.userRepository = userRepository;
         this.couponRepository = couponRepository;
         this.userProvider = userProvider;
         this.jwtService = jwtService;
+        this.tokenRepository = tokenRepository;
     }
 
 
@@ -204,12 +209,29 @@ public class UserService {
         // 3. Create JWT
         String accessToken = jwtService.createAccessToken(user.getId(),user.getRole());
 
+        //System.out.println("Access 토큰 저장 완료: "+"회원 ID: "+ createTokenRepository.get(accessToken));
+
         // 4. Refresh JWT
         String refreshToken = jwtService.createRefreshToken(user.getId(),user.getRole());
 
+        //System.out.println("Refresh 토큰 저장 완료: "+"회원 ID: "+ refreshTokenRepository.get(accessToken));
+
+
         return PostLoginRes.builder()
+                .userId(user.getId())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    /**
+     * 로그 아웃
+     * @return
+     * @throws BaseException
+     */
+    public void logout() throws BaseException {
+        String jwt = jwtService.getJwt();
+        tokenRepository.put(jwt,jwtService.getClaims(jwt).getExpiration());
+
     }
 }

@@ -56,6 +56,7 @@ public enum BaseResponseStatus {
     SUCCESS_READ_REVIEWS(true, 1043, "전체 리뷰 조회에 성공했습니다."),
     SUCCESS_UPDATE_REVIEW(true, 1044, "리뷰 수정에 성공했습니다."),
     SUCCESS_DELETE_REVIEW(true, 1045, "리뷰 삭제에 성공했습니다."),
+    SUCCESS_LOGOUT(true, 1046, "로그 아웃에 성공했습니다."),
 
     // 2000 : Request 오류
     REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
@@ -75,6 +76,8 @@ public enum BaseResponseStatus {
     EMPTY_REVIEW(false, 2044, "리뷰 내역이 비었습니다."),
     DUPLICATED_REVIEW(false, 2045, "리뷰가 이미 존재합니다."),
     NOT_AUTEHNTICATION(false, 2046, "권한임 없스니다."),
+    ALREADY_LOGOUT(false,2047,"이미 로그아웃 처리되었습니다."),
+    EXPIRED_JWT(false,2048,"JWT가 만료되었습니다"),
 
     // 3000 : Response 오류
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),

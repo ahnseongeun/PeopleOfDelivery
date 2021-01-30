@@ -5,6 +5,7 @@ import SoftSquared.PeopleOfDelivery.config.BaseResponse;
 import SoftSquared.PeopleOfDelivery.domain.user.GetUserInfo;
 import SoftSquared.PeopleOfDelivery.domain.user.GetUserRes;
 import SoftSquared.PeopleOfDelivery.domain.user.PostLoginRes;
+import SoftSquared.PeopleOfDelivery.domain.user.PostLogoutRes;
 import SoftSquared.PeopleOfDelivery.provider.UserProvider;
 import SoftSquared.PeopleOfDelivery.service.UserService;
 import SoftSquared.PeopleOfDelivery.utils.JwtService;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
 import static SoftSquared.PeopleOfDelivery.utils.ValidationRegex.isRegexEmail;
@@ -63,6 +66,20 @@ public class LoginController {
         }
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/logout",method = RequestMethod.POST)
+    @ApiOperation(value = "로그아웃 하기", notes = "로그아웃 하기")
+    public BaseResponse<Void> logout() throws BaseException{
+
+        // 2. Logout
+        try {
+            userService.logout();
+            return new BaseResponse<>(SUCCESS_LOGOUT);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 
     /**
      * JWT 검증 API
@@ -83,5 +100,6 @@ public class LoginController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
 
 }

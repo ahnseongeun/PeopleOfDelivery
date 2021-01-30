@@ -7,9 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class PostLoginRes {
+public class PostLogoutRes {
 
     private final Long userId;
-    private final String accessToken;
-    private final String refreshToken;
 }

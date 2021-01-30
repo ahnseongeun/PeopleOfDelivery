@@ -39,10 +39,11 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
-        Authentication authentication= null;
+        log.info("33");
+        Authentication authentication = null;
         try {
             authentication = getAuthentication(request);
-            log.info(authentication.toString());
+
         } catch (BaseException baseException) {
             baseException.printStackTrace();
         }
@@ -57,9 +58,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     }
 
     private Authentication getAuthentication(HttpServletRequest request) throws BaseException{
+        log.info("44");
         String token= request.getHeader("Authorization");
         if(token == null){
-            throw new BaseException(EMPTY_JWT);
+            return null;
         }
         String claims;
         try {

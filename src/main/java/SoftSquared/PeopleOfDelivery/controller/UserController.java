@@ -7,16 +7,19 @@ import SoftSquared.PeopleOfDelivery.provider.UserProvider;
 import SoftSquared.PeopleOfDelivery.service.UserService;
 import SoftSquared.PeopleOfDelivery.utils.JwtService;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.management.relation.Relation;
 import java.util.List;
 
 import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
 import static SoftSquared.PeopleOfDelivery.utils.ValidationRegex.isRegexEmail;
 
+@Slf4j
 @Controller
 @RequestMapping(value = "/api")
 public class UserController {
@@ -47,8 +50,11 @@ public class UserController {
     public BaseResponse<List<GetUserRes>> getUsers(
             @RequestParam(value = "name",required = false) String name) {
        try{
+           log.info("11");
            GetUserInfo getUserInfo = jwtService.getUserInfo();
 
+           log.info("전체 회원 조회 " + String.valueOf(getUserInfo.getRole()));
+           
            if(!getUserInfo.getRole().equals(100))
                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
 
@@ -70,20 +76,23 @@ public class UserController {
      * @return BaseResponse<GetUserRes>
      */
     @ResponseBody
-    @RequestMapping(value = "/users/{user-id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/users/{userId}",method = RequestMethod.GET)
     @ApiOperation(value = "회원 프로필 조회 (회원 기능)", notes = "회원 프로필 조회")
     public BaseResponse<GetUserRes> getUser(
-            @PathVariable("user-id") Long userId){
-
-
-        if(!getUserInfo.getRole().equals(100))
-            throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
-
-        if(userId <= 0) {
-            return new BaseResponse<>(EMPTY_USERID);
-        }
+            @PathVariable("userId") Long userId) throws BaseException {
 
         try{
+            GetUserInfo getUserInfo = jwtService.getUserInfo();
+
+            log.info("회원 프로필 조회 " + String.valueOf(getUserInfo.getRole()));
+                    
+            if(!getUserInfo.getRole().equals(1))
+                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+
+            if(userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+
             GetUserRes getUserRes = userProvider.retrieveUser(userId);
             return new BaseResponse<>(SUCCESS_READ_USER, getUserRes);
         }catch (BaseException exception){

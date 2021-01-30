@@ -1,5 +1,6 @@
 package SoftSquared.PeopleOfDelivery;
 
+import SoftSquared.PeopleOfDelivery.config.secret.Secret;
 import SoftSquared.PeopleOfDelivery.domain.coupon.Coupon;
 import SoftSquared.PeopleOfDelivery.domain.coupon.CouponRepository;
 import SoftSquared.PeopleOfDelivery.domain.menu.Menu;
@@ -13,6 +14,7 @@ import SoftSquared.PeopleOfDelivery.domain.store.Store;
 import SoftSquared.PeopleOfDelivery.domain.store.StoreRepository;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
 import SoftSquared.PeopleOfDelivery.domain.user.UserRepository;
+import SoftSquared.PeopleOfDelivery.utils.AES128;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -51,7 +53,7 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception{
-		User user = userRepository.save(new User("testName1","test1@naver.com","123321","010-1111-2222"
+		User user = userRepository.save(new User("testName1","test1@naver.com",new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt("123321"),"010-1111-2222"
 				,"서울시송파구잠실6동", 1,1,"1995-03-10",1));
 
 		couponRepository.save(Coupon.builder()
@@ -61,7 +63,7 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.coupon5000(0)
 				.build());
 
-		User host = userRepository.save(new User("hostName1","host@naver.com","123321","010-1111-2272"
+		User host = userRepository.save(new User("hostName1","host@naver.com",new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt("123321"),"010-1111-2272"
 				,"서울시송파구잠실6동", 50,1,"1995-03-10",1));
 
 		couponRepository.save(Coupon.builder()

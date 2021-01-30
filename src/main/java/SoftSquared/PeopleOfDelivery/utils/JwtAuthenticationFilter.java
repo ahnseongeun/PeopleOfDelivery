@@ -63,11 +63,13 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         if(token == null){
             return null;
         }
-        String claims;
+        Claims claims;
         try {
             //log.info("getClaims "+jwtService.getClaims(token));
             log.info("getJWT "+jwtService.getJwt());
-            claims = jwtService.getJwt();
+            //claims = jwtService.getJwt();
+            claims = jwtService.getClaims(token);
+            log.info("getClaims "+jwtService.getClaims(token));
         } catch (JwtException e) {
             throw new BaseException(INVALID_JWT);
         }

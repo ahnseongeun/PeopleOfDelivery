@@ -22,7 +22,7 @@ import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
 @Slf4j
 public class JwtService {
 
-    private final long ACCESS_TOKEN_VALID_TIME = 1 * 20 * 1000L;   // 1분
+    private final long ACCESS_TOKEN_VALID_TIME = 1 * 1020 * 1000L;   // 1분
     private final long REFRESH_TOKEN_VALID_TIME = 60 * 60 * 24 * 7 * 1000L;   // 1주
     private final HashMap<String,Date> tokenRepository;
 

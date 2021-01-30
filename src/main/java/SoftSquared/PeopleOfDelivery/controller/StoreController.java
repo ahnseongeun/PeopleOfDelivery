@@ -1,16 +1,15 @@
 package SoftSquared.PeopleOfDelivery.controller;
 
-import SoftSquared.PeopleOfDelivery.config.BaseEntity;
 import SoftSquared.PeopleOfDelivery.config.BaseException;
 import SoftSquared.PeopleOfDelivery.config.BaseResponse;
 import SoftSquared.PeopleOfDelivery.domain.store.*;
-import SoftSquared.PeopleOfDelivery.domain.user.DeleteUserRes;
-import SoftSquared.PeopleOfDelivery.domain.user.GetUserRes;
-import SoftSquared.PeopleOfDelivery.domain.user.PostUserRes;
 import SoftSquared.PeopleOfDelivery.provider.StoreProvider;
 import SoftSquared.PeopleOfDelivery.service.StoreService;
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +19,7 @@ import java.util.List;
 
 import static SoftSquared.PeopleOfDelivery.config.BaseResponseStatus.*;
 
+@Slf4j
 @Controller
 @RequestMapping(value = "/api")
 public class StoreController {
@@ -40,8 +40,24 @@ public class StoreController {
     @ResponseBody
     @RequestMapping(value = "/stores",method = RequestMethod.GET)
     @ApiOperation(value = "전체 상점 조회 (관리자 기능)", notes = "상점 목록 불러오기")
-    public BaseResponse<List<Store>> getStores(){
+    public BaseResponse<List<Store>> getStores(
+            Authentication authentication) throws BaseException {
+
+
+
         try{
+            if(authentication == null){
+                throw new BaseException(EMPTY_AUTHENTICATION);
+            }
+            Claims claims= (Claims) authentication.getPrincipal();
+            int role = claims.get("role", Integer.class);
+
+            log.info("전체 상점 조회 " + String.valueOf(role));
+
+            if(role!=100) {
+                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+            }
+
             List<Store> getStoresList = storeProvider.retrieveStoreList();
             return new BaseResponse<>(SUCCESS_READ_STORES, getStoresList);
         }catch(BaseException exception){
@@ -66,8 +82,8 @@ public class StoreController {
             @RequestParam(value = "star",required = false,defaultValue = "false") boolean starDescend,
             @RequestParam(value = "deliveryfee",required = false,defaultValue = "false") boolean deliveryFeeAscend,
             @RequestParam(value = "LowBoundPrice",required = false,defaultValue = "0") Integer lowBoundPrice,
-            @RequestParam(value = "delivery-fee-low-bound",required = false,defaultValue = "0") Integer deliveryFeeLowBound,
-            @RequestParam(value = "star-low-bound",required = false,defaultValue = "0") Integer starLowBound) {
+            @RequestParam(value = "deliveryFeeLowBound",required = false,defaultValue = "0") Integer deliveryFeeLowBound,
+            @RequestParam(value = "starLowBound",required = false,defaultValue = "0") Integer starLowBound) {
 
         List<GetStoreRes> getStoresList;
 
@@ -155,15 +171,30 @@ public class StoreController {
     @ApiOperation(value = "상점 추가 (가게 주인)", notes = "상점 추가")
     public BaseResponse<PostStoreRes> createStore (
             @RequestParam(value = "name") String name,
-            @RequestParam(value = "phone-number") String phoneNumber,
+            @RequestParam(value = "phoneNumber") String phoneNumber,
             @RequestParam(value = "location") String location,
-            @RequestParam(value = "low-bound-price") Integer lowBoundPrice,
-            @RequestParam(value = "delivery-fee") Integer deliveryFee,
+            @RequestParam(value = "lowBoundPrice") Integer lowBoundPrice,
+            @RequestParam(value = "deliveryFee") Integer deliveryFee,
             @RequestParam(value = "description") String description,
-            @RequestParam(value = "user-id") Long userId,
-            @RequestParam(value = "image-file",required = false) MultipartFile imageFile) throws IOException{
+            //@RequestParam(value = "user-id") Long userId,
+            @RequestParam(value = "imageFile",required = false) MultipartFile imageFile,
+            Authentication authentication
+            ) throws IOException, BaseException {
+
 
         try {
+            if(authentication == null){
+                throw new BaseException(EMPTY_AUTHENTICATION);
+            }
+            Claims claims= (Claims) authentication.getPrincipal();
+            int role = claims.get("role", Integer.class);
+            long userId = claims.get("userId",Integer.class);
+            log.info("상점 추가 " + String.valueOf(role));
+
+            if(role!=50) {
+                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+            }
+
             PostStoreRes postStoreRes = storeService.createStore(
                     name,phoneNumber,location,lowBoundPrice,deliveryFee,description,userId,imageFile);
             return new BaseResponse<>(SUCCESS_POST_STORE, postStoreRes);
@@ -186,10 +217,26 @@ public class StoreController {
             @RequestParam(value = "lowBoundPrice") Integer lowBoundPrice,
             @RequestParam(value = "deliveryFee") Integer deliveryFee,
             @RequestParam(value = "description") String description,
-            @RequestParam(value = "userId") Long userId,
-            @RequestParam(value = "imageFile",required = false) MultipartFile imageFile) throws IOException{
+            //@RequestParam(value = "userId") Long userId,
+            @RequestParam(value = "imageFile",required = false) MultipartFile imageFile,
+            Authentication authentication
+            ) throws IOException, BaseException {
+
 
         try {
+
+            if(authentication == null){
+                throw new BaseException(EMPTY_AUTHENTICATION);
+            }
+            Claims claims= (Claims) authentication.getPrincipal();
+            int role = claims.get("role", Integer.class);
+            long userId = claims.get("userId",Integer.class);
+            log.info("상점 수정 " + String.valueOf(role));
+
+            if(role!=50) {
+                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+            }
+
             PostStoreRes postStoreRes = storeService.updateStore(
                     storeId,name,phoneNumber,location,lowBoundPrice,deliveryFee,description,userId,imageFile);
             return new BaseResponse<>(SUCCESS_UPDATE_STORE, postStoreRes);
@@ -202,14 +249,30 @@ public class StoreController {
      * 상점 삭제
      */
     @ResponseBody
-    @RequestMapping(value = "/stores/{storeId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/stores/delete/{storeId}", method = RequestMethod.PATCH)
     @ApiOperation(value = "상점 삭제(가게점주 기능)", notes = "상점 삭제")
     public BaseResponse<DeleteStoreRes> DeleteUser(
-            @PathVariable Long storeId) throws BaseException{
+            @PathVariable Long storeId,
+            Authentication authentication
+    ) throws BaseException{
+
 
         // 2. Post UserInfo
         try {
-            DeleteStoreRes deleteStoreRes = storeService.deleteStore(storeId);
+
+            if(authentication == null){
+                throw new BaseException(EMPTY_AUTHENTICATION);
+            }
+            Claims claims= (Claims) authentication.getPrincipal();
+            int role = claims.get("role", Integer.class);
+            long userId = claims.get("userId",Integer.class);
+            log.info("상점 삭제 " + String.valueOf(role));
+
+            if(role!=50) {
+                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+            }
+
+            DeleteStoreRes deleteStoreRes = storeService.deleteStore(storeId,userId);
             return new BaseResponse<>(SUCCESS_DELETE_STORE, deleteStoreRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

@@ -82,6 +82,10 @@ public enum BaseResponseStatus {
     EXPIRED_JWT(false,2048,"JWT가 만료되었습니다"),
     EXPIRED_REFRESH_JWT(false,2049,"REFRESH JWT가 만료되었습니다"),
     INVAILD_REFRESH_JWT(false,2050,"유효하지 않은 JWT입니다."),
+    EMPTY_AUTHENTICATION(false,2051,"권한을 입력하세요."),
+
+
+
     // 3000 : Response 오류
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
     NOT_FOUND_USER(false, 3010, "존재하지 않는 회원입니다."),
@@ -129,6 +133,7 @@ public enum BaseResponseStatus {
     FAILED_TO_UPDATE_REVIEW(false, 3054, "리뷰 수정에 실패 했습니다."),
     FAILED_TO_DELETE_REVIEW(false, 3055, "리뷰 삭제에 실패 했습니다."),
     FAILED_TO_GET_AUTHENTICATION(false, 3057, "권한 획득에 실패했습니다."),
+    FAILED_TO_DELETE_STORE(false, 3058, "가게 삭제에 실패했습니다."),
 
 
     // 4000 : Database 오류

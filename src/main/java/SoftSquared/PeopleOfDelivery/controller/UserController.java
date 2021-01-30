@@ -6,9 +6,11 @@ import SoftSquared.PeopleOfDelivery.domain.user.*;
 import SoftSquared.PeopleOfDelivery.provider.UserProvider;
 import SoftSquared.PeopleOfDelivery.service.UserService;
 import SoftSquared.PeopleOfDelivery.utils.JwtService;
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,17 +50,23 @@ public class UserController {
     @RequestMapping(value = "/users",method = RequestMethod.GET)
     @ApiOperation(value = "전체 회원 조회 (관리자 기능)", notes = "회원 목록 불러오기")
     public BaseResponse<List<GetUserRes>> getUsers(
+            Authentication authentication,
             @RequestParam(value = "name",required = false) String name) {
        try{
-           log.info("11");
-           GetUserInfo getUserInfo = jwtService.getUserInfo();
 
-           log.info("전체 회원 조회 " + String.valueOf(getUserInfo.getRole()));
+           if(authentication == null){
+               throw new BaseException(EMPTY_AUTHENTICATION);
+           }
+           Claims claims= (Claims) authentication.getPrincipal();
+           Integer role = claims.get("role", Integer.class);
+
+           log.info("전체 회원 조회 " + String.valueOf(role));
            
-           if(!getUserInfo.getRole().equals(100))
+           if(!role.equals(100))
                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
 
            List<GetUserRes> getUsersResList = userProvider.retrieveUserList(name);
+
            if (name == null) {
                return new BaseResponse<>(SUCCESS_READ_USERS, getUsersResList);
            } else {
@@ -76,18 +84,27 @@ public class UserController {
      * @return BaseResponse<GetUserRes>
      */
     @ResponseBody
-    @RequestMapping(value = "/users/{userId}",method = RequestMethod.GET)
-    @ApiOperation(value = "회원 프로필 조회 (회원 기능)", notes = "회원 프로필 조회")
+    @RequestMapping(value = "/users/me",method = RequestMethod.GET)
+    @ApiOperation(value = "내 프로필 조회 (전체 기능)", notes = "내 프로필 조회")
     public BaseResponse<GetUserRes> getUser(
-            @PathVariable("userId") Long userId) throws BaseException {
+            //@PathVariable("userId") Long userId,
+            Authentication authentication) throws BaseException {
 
         try{
-            GetUserInfo getUserInfo = jwtService.getUserInfo();
+            //GetUserInfo getUserInfo = jwtService.getUserInfo();
 
-            log.info("회원 프로필 조회 " + String.valueOf(getUserInfo.getRole()));
+            if(authentication == null){
+                throw new BaseException(EMPTY_AUTHENTICATION);
+            }
+            Claims claims= (Claims) authentication.getPrincipal();
+            int role = claims.get("role", Integer.class);
+            long userId = claims.get("userId",Integer.class);
+
+            log.info("회원 프로필 조회 " + String.valueOf(role));
                     
-            if(!getUserInfo.getRole().equals(1))
+            if(!(role == 1 || role == 50 || role== 100)) {
                 throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+            }
 
             if(userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
@@ -109,7 +126,7 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/users", method = RequestMethod.POST)
-    @ApiOperation(value = "회원 가입 (회원 기능)", notes = "회원 가입")
+    @ApiOperation(value = "회원 가입 ", notes = "회원 가입")
     public BaseResponse<PostUserRes> CreateUser(
             @RequestParam(name = "name") String name,
             @RequestParam(name = "email") String email,
@@ -161,16 +178,30 @@ public class UserController {
      * 사진, 위치
      */
     @ResponseBody
-    @RequestMapping(value = "/users/{userId}", method = RequestMethod.PATCH)
-    @ApiOperation(value = "프로필 수정(회원 기능)", notes = "프로필 수정")
+    @RequestMapping(value = "/users/me", method = RequestMethod.PATCH)
+    @ApiOperation(value = "내 프로필 수정(전체 기능)", notes = "내 프로필 수정")
     public BaseResponse<UpdateUserRes> UpdateUser(
-            @PathVariable Long userId,
+            //@PathVariable Long userId,
             @RequestParam(name = "password") String password,
             @RequestParam(name = "confirmPassword") String confirmPassword,
             @RequestParam(name = "updatePassword",required = false,defaultValue = "empty") String updatePassword,
-            @RequestParam(name = "location") String location,
-            @RequestParam(value = "imageFile",required = false) MultipartFile imageFile )
+            @RequestParam(name = "location",required = false) String location,
+            @RequestParam(value = "imageFile",required = false) MultipartFile imageFile,
+            Authentication authentication)
             throws BaseException{
+
+        if(authentication == null){
+            throw new BaseException(EMPTY_AUTHENTICATION);
+        }
+        Claims claims= (Claims) authentication.getPrincipal();
+        int role = claims.get("role", Integer.class);
+        long userId = claims.get("userId",Integer.class);
+
+        log.info("회원 프로필 수정 " + String.valueOf(role));
+
+        if(!(role == 1 || role == 50 || role== 100)) {
+            throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+        }
 
         // 1. Body Parameter Validation
         if (password == null || password.length() == 0) {
@@ -181,6 +212,10 @@ public class UserController {
         }
         if (!password.equals(confirmPassword)) {
             return new BaseResponse<>(DO_NOT_MATCH_PASSWORD);
+        }
+
+        if(userId <= 0) {
+            return new BaseResponse<>(EMPTY_USERID);
         }
 
         // 2. Post UserInfo
@@ -198,10 +233,30 @@ public class UserController {
      * 삭제
      */
     @ResponseBody
-    @RequestMapping(value = "/users/{userId}", method = RequestMethod.DELETE)
-    @ApiOperation(value = "회원 삭제(회원 기능)", notes = "회원 삭제")
+    @RequestMapping(value = "/users/delete", method = RequestMethod.PATCH)
+    @ApiOperation(value = "내 정보 삭제(전체 기능)", notes = "내 정보 삭제")
     public BaseResponse<DeleteUserRes> DeleteUser(
-            @PathVariable Long userId) throws BaseException{
+            //@PathVariable Long userId,
+            Authentication authentication) throws BaseException{
+
+        if(authentication == null){
+            throw new BaseException(EMPTY_AUTHENTICATION);
+        }
+
+        Claims claims= (Claims) authentication.getPrincipal();
+        int role = claims.get("role", Integer.class);
+        long userId = claims.get("userId",Integer.class);
+
+        log.info("회원 프로필 삭제 " + String.valueOf(role));
+
+        if(!(role == 1 || role == 50 || role== 100)) {
+            throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+        }
+
+        //JWT와 userId가 일치하는지??
+        if(userId <= 0) {
+            return new BaseResponse<>(EMPTY_USERID);
+        }
 
         // 2. Post UserInfo
         try {

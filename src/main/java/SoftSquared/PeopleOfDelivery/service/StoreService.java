@@ -57,7 +57,7 @@ public class StoreService {
                                     Integer deliveryFee,String description, Long userId, MultipartFile imageFile)
             throws BaseException, IOException {
 
-        User user = userrepository.findById(userId)
+        User user = userrepository.findByIdAndStatus(userId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
 
         //이미지가 없을 경우 default 경로
@@ -117,7 +117,7 @@ public class StoreService {
                                     Long userId,
                                     MultipartFile imageFile) throws BaseException {
 
-        User user = userrepository.findById(userId)
+        User user = userrepository.findByIdAndStatus(userId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
 
         Store store = storeRepository.findByIdAndStatus(storeId,1)
@@ -167,10 +167,13 @@ public class StoreService {
 
     }
 
-    public DeleteStoreRes deleteStore(Long storeId) throws BaseException {
+    public DeleteStoreRes deleteStore(Long storeId,Long userId) throws BaseException {
 
         Store store = storeRepository.findByIdAndStatus(storeId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_STORES));
+
+        if(!store.getUser().getId().equals(userId))
+            throw new BaseException(FAILED_TO_DELETE_STORE);
 
         store.setStatus(2);
 

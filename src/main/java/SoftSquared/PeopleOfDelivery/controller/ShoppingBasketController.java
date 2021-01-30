@@ -42,6 +42,7 @@ public class ShoppingBasketController {
     public BaseResponse<List<GetShoppingBasketRes>> getBasket(
             @PathVariable("userId") Long userId) throws BaseException{
         List<GetShoppingBasketRes> getShoppingBasketRes;
+
         try{
             getShoppingBasketRes = shoppingBasketProvider.retrieveShoppingBasket(userId);
             return new BaseResponse<>(SUCCESS_READ_SHOPPING_BASKET, getShoppingBasketRes);

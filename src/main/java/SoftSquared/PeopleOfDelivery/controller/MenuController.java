@@ -160,9 +160,9 @@ public class MenuController {
             if(role != 50) {
                 throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
             }
-            
+
             PostMenuRes postMenuRes = menuService.updateMenu(
-                    menuId,name,price,popularCheck,description,storeId,imageFile
+                    menuId,userId,name,price,popularCheck,description,storeId,imageFile
             );
             return new BaseResponse<>(SUCCESS_UPDATE_MENU, postMenuRes);
         }catch(BaseException exception){
@@ -199,7 +199,7 @@ public class MenuController {
             }
 
             deleteMenuRes = menuService.deleteMenu(
-                    menuId , imageStatus
+                    menuId ,userId, imageStatus
             );
             return new BaseResponse<>(SUCCESS_DELETE_MENU, deleteMenuRes);
         }catch(BaseException exception){

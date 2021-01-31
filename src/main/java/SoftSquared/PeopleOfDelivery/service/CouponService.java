@@ -51,6 +51,8 @@ public class CouponService {
         Coupon coupon = couponRepository.findByUser(user)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_COUPON));
 
+        if(!coupon.getUser().getId().equals(userId))
+            throw new BaseException(NOT_EQUAL_HOST_AND_USER);
 
         if(coupon1000Count > 0){
             if(operationCheck) { //0은 플러스, 1은 마이너스
@@ -113,6 +115,9 @@ public class CouponService {
 
         Coupon coupon = couponRepository.findByUser(user)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_COUPON));
+
+        if(!coupon.getUser().getId().equals(userId))
+            throw new BaseException(NOT_EQUAL_HOST_AND_USER);
 
         if(coupon1000Count){
             coupon.setCoupon1000(0);

@@ -85,6 +85,7 @@ public class MenuService {
     }
 
     public PostMenuRes updateMenu(Long menuId,
+                                  Long userId,
                                   String name,
                                   Integer price,
                                   Integer popularCheck,
@@ -98,6 +99,8 @@ public class MenuService {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_STORE));
 
+        if(!store.getUser().getId().equals(userId))
+            throw new BaseException(NOT_EQUAL_HOST_AND_USER);
         //이미지가 없을 경우 default 경로
         String imageURL;
         int imageStatus;
@@ -146,10 +149,13 @@ public class MenuService {
 
     }
 
-    public DeleteMenuRes deleteMenu(Long menuId, boolean imageStatus) throws BaseException {
+    public DeleteMenuRes deleteMenu(Long menuId, Long userId ,boolean imageStatus) throws BaseException {
 
         Menu menu = menuRepository.findByIdAndStatus(menuId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_MENU));
+
+        if(!menu.getStore().getUser().getId().equals(userId))
+            throw new BaseException(NOT_EQUAL_HOST_AND_USER);
 
         if(imageStatus){
             menu.setImageStatus(2);

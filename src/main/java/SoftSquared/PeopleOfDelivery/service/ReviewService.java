@@ -114,12 +114,16 @@ public class ReviewService {
      * @throws BaseException
      */
     public GetReviewsRes updateReview(Long reviewId,
+                                      Long userId,
                                       Integer role,
                                       String content,
                                       Integer startCount) throws BaseException {
 
         Review review = reviewRepository.findByIdAndStatus(reviewId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_REVIEW));
+
+        if(!review.getUser().getId().equals(userId))
+            throw new BaseException(NOT_EQUAL_RQEUSTUSER_AND_REVIEWUSER);
 
         if(role == 50)
             startCount = 0;
@@ -148,10 +152,14 @@ public class ReviewService {
      * @param reviewId
      * @return
      */
-    public DeleteReviewRes deleteReview(Long reviewId) throws BaseException {
+    public DeleteReviewRes deleteReview(Long reviewId,Long userId) throws BaseException {
 
         Review review = reviewRepository.findByIdAndStatus(reviewId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_REVIEW));
+
+        if(!review.getUser().getId().equals(userId))
+            throw new BaseException(NOT_EQUAL_RQEUSTUSER_AND_REVIEWUSER);
+
 
         review.setStatus(2);
 

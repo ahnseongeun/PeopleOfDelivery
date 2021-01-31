@@ -123,6 +123,9 @@ public class StoreService {
         Store store = storeRepository.findByIdAndStatus(storeId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_STORES));
 
+        if(!store.getUser().getId().equals(userId))
+            throw new BaseException(NOT_EQUAL_HOST_AND_USER);
+
         //이미지가 없을 경우 default 경로
         String imageURL;
         log.info(String.valueOf(imageFile));
@@ -149,7 +152,7 @@ public class StoreService {
         try{
             newStore = storeRepository.save(store);
         }catch (Exception exception){
-            throw new BaseException(FAILED_TO_UPDATE_STORE);
+            throw new BaseException(NOT_EQUAL_HOST_AND_USER);
         }
 
         //PostStoreRes 반환
@@ -177,7 +180,11 @@ public class StoreService {
 
         store.setStatus(2);
 
-        store = storeRepository.save(store);
+        try{
+            store = storeRepository.save(store);
+        }catch (Exception e){
+            throw new BaseException(FAILED_TO_DELETE_STORE);
+        }
 
         return DeleteStoreRes.builder()
                 .storeId(store.getId())

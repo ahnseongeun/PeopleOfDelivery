@@ -38,7 +38,7 @@ public class ShoppingBasketController {
      */
 
     /**
-     * 회원 장바구니 조회
+     * 내 장바구니 조회
      */
     @ResponseBody
     @RequestMapping(value = "/baskets/me",method = RequestMethod.GET)
@@ -145,13 +145,27 @@ public class ShoppingBasketController {
     @ApiOperation(value = "장바구니 메뉴 수정 (회원 기능)", notes = "장바구니 메뉴 수정")
     public BaseResponse<UpdateShoppingBasketRes> updateBasket(
             @PathVariable Long basketId,
-            @RequestParam(value = "operationCheck",required = false,defaultValue = "true") boolean operationCheck
+            @RequestParam(value = "operationCheck",required = false,defaultValue = "true") boolean operationCheck,
+            Authentication authentication
             ) throws BaseException {
 
         UpdateShoppingBasketRes updateShoppingBasketRes;
 
         try{
-            updateShoppingBasketRes = shoppingBasketService.updateShoppingBasket(basketId, operationCheck);
+
+            if(authentication == null){
+                throw new BaseException(EMPTY_AUTHENTICATION);
+            }
+            Claims claims= (Claims) authentication.getPrincipal();
+            int role = claims.get("role", Integer.class);
+            long userId = claims.get("userId",Integer.class);
+            log.info("장바구니 물건 수정");
+
+            if(role != 1) {
+                throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
+            }
+
+            updateShoppingBasketRes = shoppingBasketService.updateShoppingBasket(userId, basketId, operationCheck);
             return new BaseResponse<>(SUCCESS_UPDATE_SHOPPING_BASKET, updateShoppingBasketRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
@@ -178,13 +192,14 @@ public class ShoppingBasketController {
             }
             Claims claims= (Claims) authentication.getPrincipal();
             int role = claims.get("role", Integer.class);
+            long userId = claims.get("userId",Integer.class);
             log.info("장바구니에 물건 담기");
 
             if(role != 1) {
                 throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
             }
 
-            deleteShoppingBasketRes = shoppingBasketService.deleteShoppingBasket(basketId);
+            deleteShoppingBasketRes = shoppingBasketService.deleteShoppingBasket(userId,basketId);
             return new BaseResponse<>(SUCCESS_DELETE_SHOPPING_BASKET, deleteShoppingBasketRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());

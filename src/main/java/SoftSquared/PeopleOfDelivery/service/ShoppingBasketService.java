@@ -76,11 +76,16 @@ public class ShoppingBasketService {
      * @return
      * @throws BaseException
      */
-    public UpdateShoppingBasketRes updateShoppingBasket(Long basketId,
+    public UpdateShoppingBasketRes updateShoppingBasket(Long userId,
+                                                        Long basketId,
                                                         boolean operationCheck) throws BaseException{
 
         ShoppingBasket shoppingBasket = shoppingBasketRepository.findByIdAndStatus(basketId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_BASKET));
+
+        if(!shoppingBasket.getUser().getId().equals(userId))
+            throw new BaseException(NOT_EQUAL_RQEUSTUSER_AND_BASKETUSER);
+
 
         int menuCount = shoppingBasket.getMenuCount();
 
@@ -114,10 +119,14 @@ public class ShoppingBasketService {
      * @param basketId
      * @return
      */
-    public DeleteShoppingBasketRes deleteShoppingBasket(Long basketId) throws BaseException {
+    public DeleteShoppingBasketRes deleteShoppingBasket(Long userId,
+                                                        Long basketId) throws BaseException {
 
         ShoppingBasket shoppingBasket = shoppingBasketRepository.findByIdAndStatus(basketId,1)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_BASKET));
+
+        if(!shoppingBasket.getUser().getId().equals(userId))
+            throw new BaseException(NOT_EQUAL_RQEUSTUSER_AND_BASKETUSER);
 
         shoppingBasket.setStatus(2);
 

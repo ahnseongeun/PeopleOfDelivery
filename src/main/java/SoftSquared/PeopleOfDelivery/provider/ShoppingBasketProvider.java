@@ -47,6 +47,7 @@ public class ShoppingBasketProvider {
         User user = userRepository.findByIdAndStatus(userId,1).orElseThrow(()
                 -> new BaseException(FAILED_TO_GET_USER));
 
+
         List<ShoppingBasket> shoppingBasketList = shoppingBasketRepository.findByUserAndStatus(user,1);
 
         ShoppingBasket shoppingBasketStore;

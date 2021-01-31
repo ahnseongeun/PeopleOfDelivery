@@ -210,6 +210,7 @@ public class ReviewController {
                 throw new BaseException(EMPTY_AUTHENTICATION);
             }
             Claims claims= (Claims) authentication.getPrincipal();
+            long userId = claims.get("userId", Integer.class);
             int role = claims.get("role", Integer.class);
             log.info("리뷰 수정");
 
@@ -217,7 +218,7 @@ public class ReviewController {
                 throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
             }
 
-            getReviewsRes = reviewService.updateReview(reviewId,role,content,startCount);
+            getReviewsRes = reviewService.updateReview(reviewId,userId,role,content,startCount);
             return new BaseResponse<>(SUCCESS_UPDATE_REVIEW, getReviewsRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
@@ -245,6 +246,7 @@ public class ReviewController {
                 throw new BaseException(EMPTY_AUTHENTICATION);
             }
             Claims claims= (Claims) authentication.getPrincipal();
+            long userId = claims.get("userId", Integer.class);
             int role = claims.get("role", Integer.class);
             log.info("리뷰 삭제");
 
@@ -252,7 +254,7 @@ public class ReviewController {
                 throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
             }
 
-            DeleteReviewRes = reviewService.deleteReview(reviewId);
+            DeleteReviewRes = reviewService.deleteReview(reviewId,userId);
             return new BaseResponse<>(SUCCESS_DELETE_REVIEW, DeleteReviewRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());

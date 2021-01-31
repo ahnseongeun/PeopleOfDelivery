@@ -138,9 +138,12 @@ public enum BaseResponseStatus {
 
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),
-    DATABASE_ERROR(false, 4001, "데이터베이스 연결에 실패하였습니다.");
+    DATABASE_ERROR(false, 4001, "데이터베이스 연결에 실패하였습니다."),
 
     // 5000 : 필요시 만들어서 쓰세요
+    NOT_EQUAL_HOST_AND_USER(false, 5000, "가게 주인과 요청한 사람이 같지 않습니다."),
+    NOT_EQUAL_RQEUSTUSER_AND_REVIEWUSER(false, 5001, "리뷰 주인과 요청한 사람이 같지 않습니다."),
+    NOT_EQUAL_RQEUSTUSER_AND_BASKETUSER(false, 5002, "장바구니 주인과 요청한 사람이 같지 않습니다.");
     // 6000 : 필요시 만들어서 쓰세요
 
     private final boolean isSuccess;

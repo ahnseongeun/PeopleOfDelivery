@@ -220,10 +220,13 @@ public class OrderService {
      * @return
      * @throws BaseException
      */
-    public DeleteOrderRes DeleteOrder(Long orderId) throws BaseException {
+    public DeleteOrderRes DeleteOrder(Long orderId,Long userId) throws BaseException {
 
         Orders orders = ordersRepository.findByIdAndStatus(orderId,2)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_ORDER));
+
+        if(!orders.getUser().getId().equals(userId))
+            throw new BaseException(NOT_EQUAL_HOST_AND_USER);
 
         orders.setStatus(3);
 

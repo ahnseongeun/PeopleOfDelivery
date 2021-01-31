@@ -174,7 +174,7 @@ public class MenuController {
      * 메뉴 삭제
      */
     @ResponseBody
-    @RequestMapping(value = "/menus/{menuId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/menus/delete/{menuId}",method = RequestMethod.PATCH)
     @ApiOperation(value = "메뉴 삭제하기", notes = "메뉴 삭제하기")
     public BaseResponse<DeleteMenuRes> DeleteMenu(
             @PathVariable Long menuId,

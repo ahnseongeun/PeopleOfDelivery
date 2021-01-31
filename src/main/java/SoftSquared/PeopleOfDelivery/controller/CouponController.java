@@ -147,7 +147,7 @@ public class CouponController {
      * 쿠폰 삭제하기 (초기화)
      */
     @ResponseBody
-    @RequestMapping(value = "/coupons/{userId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/coupons/delete/{userId}",method = RequestMethod.PATCH)
     @ApiOperation(value = " 쿠폰 초기화 하기 (관리자 권한) ", notes = " 쿠폰 초기화")
     public BaseResponse<GetCouponRes> deleteCoupon(
             @PathVariable Long userId,

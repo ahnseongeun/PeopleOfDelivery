@@ -141,7 +141,7 @@ public class PaymentController {
      * 결제 내역 삭제
      */
     @ResponseBody
-    @RequestMapping(value = "/payments/{paymentId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/payments/delete/{paymentId}",method = RequestMethod.PATCH)
     @ApiOperation(value = "결재 내역 삭제", notes = "결재 내역 삭제")
     public BaseResponse<DeletePaymentRes> deletePayment(
             @PathVariable Long paymentId,

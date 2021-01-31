@@ -88,7 +88,7 @@ public class LoginController {
      * @return BaseResponse<Void>
      */
     @ResponseBody
-    @RequestMapping(value = "/users/jwt",method = RequestMethod.GET)
+    @RequestMapping(value = "/jwt",method = RequestMethod.GET)
     @ApiOperation(value = "jwt 검증", notes = "jwt 검증")
     public BaseResponse<Void> jwt(
     ) throws BaseException {
@@ -108,7 +108,7 @@ public class LoginController {
      * @return BaseResponse<Void>
      */
     @ResponseBody
-    @RequestMapping(value = "/refresh/jwt",method = RequestMethod.GET)
+    @RequestMapping(value = "/refresh-jwt",method = RequestMethod.GET)
     @ApiOperation(value = "refresh jwt", notes = "refresh jwt")
     public BaseResponse<PostLoginRes> refreshJWT(
            // @RequestParam(value = "expiredJwt") String expiredJwt

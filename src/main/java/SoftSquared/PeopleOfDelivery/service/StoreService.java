@@ -176,7 +176,7 @@ public class StoreService {
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_STORES));
 
         if(!store.getUser().getId().equals(userId))
-            throw new BaseException(FAILED_TO_DELETE_STORE);
+            throw new BaseException(NOT_EQUAL_HOST_AND_USER);
 
         store.setStatus(2);
 

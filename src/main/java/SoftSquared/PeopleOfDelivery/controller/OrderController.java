@@ -186,7 +186,7 @@ public class OrderController {
      * 주문 삭제
      */
     @ResponseBody
-    @RequestMapping(value = "/orders/{orderId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/orders/delete/{orderId}",method = RequestMethod.PATCH)
     @ApiOperation(value = "회원 주문 삭제하기", notes = "회원 주문 삭제하기")
     public BaseResponse<DeleteOrderRes> DeleteOrder(
             @PathVariable Long orderId,
@@ -200,6 +200,7 @@ public class OrderController {
                 throw new BaseException(EMPTY_AUTHENTICATION);
             }
             Claims claims= (Claims) authentication.getPrincipal();
+            long userId = claims.get("userId",Integer.class);
             int role = claims.get("role", Integer.class);
 
             log.info("회원 주문 삭제하기");
@@ -208,7 +209,7 @@ public class OrderController {
                 throw new BaseException(FAILED_TO_GET_AUTHENTICATION);
             }
 
-            deleteOrderRes = orderService.DeleteOrder(orderId);
+            deleteOrderRes = orderService.DeleteOrder(orderId,userId);
             return new BaseResponse<>(SUCCESS_DELETE_ORDER, deleteOrderRes);
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());

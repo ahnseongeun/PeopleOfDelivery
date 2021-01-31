@@ -147,6 +147,9 @@ public class UserController {
         if (password == null || password.length() == 0) {
             return new BaseResponse<>(EMPTY_PASSWORD);
         }
+//        if (!isRegexPassword(password)){
+//            return new BaseResponse<>(INVALID_PASSWORD);
+//        }
         if (confirmPassword == null || confirmPassword.length() == 0) {
             return new BaseResponse<>(EMPTY_CONFIRM_PASSWORD);
         }
@@ -168,10 +171,6 @@ public class UserController {
         }
     }
 
-
-    /**
-     * 로그인
-     */
 
     /**
      * 유저 프로필 수정
@@ -207,9 +206,11 @@ public class UserController {
         if (password == null || password.length() == 0) {
             return new BaseResponse<>(EMPTY_PASSWORD);
         }
+
         if (confirmPassword == null || confirmPassword.length() == 0) {
             return new BaseResponse<>(EMPTY_CONFIRM_PASSWORD);
         }
+
         if (!password.equals(confirmPassword)) {
             return new BaseResponse<>(DO_NOT_MATCH_PASSWORD);
         }

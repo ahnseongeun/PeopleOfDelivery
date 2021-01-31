@@ -176,7 +176,7 @@ public class ShoppingBasketController {
      * 장바구니 삭제
      */
     @ResponseBody
-    @RequestMapping(value = "/baskets/{basketId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/baskets/delete/{basketId}",method = RequestMethod.PATCH)
     @ApiOperation(value = "장바구니 메뉴 삭제 (회원 기능)", notes = "장바구니 메뉴 삭제")
     public BaseResponse<DeleteShoppingBasketRes> deleteBasket(
             @PathVariable Long basketId,

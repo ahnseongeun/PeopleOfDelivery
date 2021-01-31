@@ -15,19 +15,26 @@ import SoftSquared.PeopleOfDelivery.domain.store.StoreRepository;
 import SoftSquared.PeopleOfDelivery.domain.user.User;
 import SoftSquared.PeopleOfDelivery.domain.user.UserRepository;
 import SoftSquared.PeopleOfDelivery.utils.AES128;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PeopleOfDeliveryApplication implements CommandLineRunner{
+public class PeopleOfDeliveryApplication
+		//implements CommandLineRunner
+{
+	public static void main(String[] args) {
+		SpringApplication.run(PeopleOfDeliveryApplication.class, args);
+	}
 
-	private final UserRepository userRepository;
+	/*private final UserRepository userRepository;
 	private final StoreRepository storeRepository;
 	private final OrdersRepository ordersRepository;
 	private final CouponRepository couponRepository;
 	private final MenuRepository menuRepository;
 	private final ShoppingBasketRepository shoppingBasketRepository;
+
 	private final ReviewRepository reviewRepository;
 
 	public PeopleOfDeliveryApplication(UserRepository userRepository,
@@ -45,13 +52,11 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 		this.shoppingBasketRepository = shoppingBasketRepository;
 		this.reviewRepository = reviewRepository;
 	}
-
-	public static void main(String[] args) {
-		SpringApplication.run(PeopleOfDeliveryApplication.class, args);
-	}
+	*/
 
 
-	@Override
+
+	/*@Override
 	public void run(String... args) throws Exception{
 		User user = userRepository.save(new User("testName1","test1@naver.com",new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt("123321"),"010-1111-2222"
 				,"서울시송파구잠실6동", 1,1,"1995-03-10",1));
@@ -73,12 +78,12 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.coupon5000(0)
 				.build());
 
-		/**
+		*//**
 		 * 주문 많은순
 		 * store 2개 추가
 		 * order가 1개, 2개
 		 * return은 2개, 개순
-		 */
+		 *//*
 	Store store =	storeRepository.save(Store.builder()
 				.id(1L)
 				.name("testStore1")
@@ -150,6 +155,6 @@ public class PeopleOfDeliveryApplication implements CommandLineRunner{
 				.user(user)
 				.status(1)
 				.build());
-	}
+	}*/
 
 }

@@ -1,14 +1,44 @@
+server:
+  port: 9000
+
 spring:
-  h2:
-    console:
-      enabled: true
-  profiles:
-    active: local
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: create
+      # create, update, create-drop, none 등의 옵션이 있습니다.
+      # create: 기존테이블 삭제 후 다시 생성
+      # update: 변경된 부분만 반영
+      # create-drop: create와 같으나 종료 시점에 테이블 DROP
+      # none: 사용하지 않음
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    # DDl 생성 시 데이터베이스 고유의 기능 사용여부
+    generate-ddl: true
+    # 실행되는 쿼리문 보여주기 여부
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:userdb;DB_CLOSE_DELAY=-1
-    username: sa
-    password:
+    platform: mysql
+    url: jdbc:mysql://mywebserverrdstest1.caf5bqcjx6lw.ap-northeast-2.rds.amazonaws.com:3306/peopleofdelivery
+    username: root
+    password: 112233ll
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+#spring:
+#  h2:
+#    console:
+#      enabled: true
+#  profiles:
+#    active: local
+#  datasource:
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:userdb;DB_CLOSE_DELAY=-1
+#    username: sa
+#    password:
 
 #spring
 #  jpadatabase-platform=org.hibernate.dialect.MySQL5InnoDBDialect
@@ -17,11 +47,11 @@ spring:
 #  spring.datasource.username=root
 #  spring.datasource.password=123321
 #  spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create # ddl 옵션을 무엇으로 할 것인지 (none | create-drop | create | update | validate)
-      generate-ddl: true # true 설정 시, 해당 데이터를 근거로 서버 시작 시점에 DDL 문 생성하여 DB 에 적용 (ddl 생성옵션 링크)
-      show-sql: true # true 설정 시, 콘솔에 JPA 쿼리를 보여준다.
-      properties.hibernate.format_sql: true # true 설정 시, 콘솔에 표시되는 쿼리를 가독성있게 보여준다.
-      properties.hibernate.use_sql_comments: false # true 설정 시, 콘솔에 표시되는 쿼리문 위에 어떤 실행을 하려는지 hint 를 보여준다.
+#  jpa:
+#    database-platform: org.hibernate.dialect.H2Dialect
+#    hibernate:
+#      ddl-auto: create # ddl 옵션을 무엇으로 할 것인지 (none | create-drop | create | update | validate)
+#      generate-ddl: true # true 설정 시, 해당 데이터를 근거로 서버 시작 시점에 DDL 문 생성하여 DB 에 적용 (ddl 생성옵션 링크)
+#      show-sql: true # true 설정 시, 콘솔에 JPA 쿼리를 보여준다.
+#      properties.hibernate.format_sql: true # true 설정 시, 콘솔에 표시되는 쿼리를 가독성있게 보여준다.
+#      properties.hibernate.use_sql_comments: false # true 설정 시, 콘솔에 표시되는 쿼리문 위에 어떤 실행을 하려는지 hint 를 보여준다.
